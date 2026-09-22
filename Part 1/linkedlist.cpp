@@ -1,6 +1,6 @@
-#include "iostream"
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -16,7 +16,6 @@ public:
   int daysVisitsPerYear;
 };
 
-// Dataset 1
 const int MAX_PATIENTS = 200;
 Patient patientList1[MAX_PATIENTS];
 Patient patientList2[MAX_PATIENTS];
@@ -24,12 +23,15 @@ Patient patientList3[MAX_PATIENTS];
 
 class PatientNode {
 public:
-  PatientNode(Patient patientParam) { patient = patientParam; }
+  PatientNode(Patient patientParam) {
+    patient = patientParam;
+    nextPatient = nullptr;
+  }
+
   Patient patient;
   PatientNode *nextPatient;
 };
 
-// Use this to read data into array
 void readFromDataset(string fileName, Patient patient[]) {
 
   ifstream file(fileName);
@@ -45,8 +47,8 @@ void readFromDataset(string fileName, Patient patient[]) {
   // Remove header row
   getline(file, line);
 
-  while (getline(file, line)) {
-    // Read up to ,
+  while (getline(file, line) && lineCount < MAX_PATIENTS) {
+
     stringstream ss(line);
     string token;
 
@@ -70,13 +72,19 @@ void readFromDataset(string fileName, Patient patient[]) {
 
     lineCount++;
   }
+
+  file.close();
 }
 
 PatientNode *convertToLinkedList(Patient patient[]) {
+
   PatientNode *head = nullptr;
   PatientNode *next = nullptr;
+
   for (int i = 0; i < MAX_PATIENTS; i++) {
+
     PatientNode *temp = new PatientNode(patient[i]);
+
     if (head == nullptr) {
       head = temp;
       next = temp;
@@ -85,11 +93,11 @@ PatientNode *convertToLinkedList(Patient patient[]) {
       next = temp;
     }
   }
+
   return head;
 }
 
-void sortDataset1() {}
-
+// FIXME: remove this later
 void tempPrintNode(PatientNode *patientNode) {
   cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
        << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
@@ -110,27 +118,8 @@ void tempPrintNode(PatientNode *patientNode) {
   }
 }
 
-void tempPrintArr(Patient arr[]) {
-  cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
-       << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
-       << setw(15) << "Visits/Year" << endl;
-
-  cout << string(80, '-') << endl;
-
-  for (int i = 0; i < MAX_PATIENTS; i++) {
-    cout << left << setw(12) << arr[i].PatientID << setw(8) << arr[i].age
-         << setw(15) << arr[i].careType << setw(15) << arr[i].lengthOfStay
-         << setw(15) << arr[i].baseCostPerHour << setw(15)
-         << arr[i].daysVisitsPerYear << endl;
-  }
-}
-
 int main() {
   readFromDataset(
       "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
       patientList1);
-
-  PatientNode *linkedList1 = convertToLinkedList(patientList1);
-  tempPrintNode(linkedList1);
-  // tempPrintArr(patientList1);
 }
