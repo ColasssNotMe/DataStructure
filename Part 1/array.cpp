@@ -1,7 +1,8 @@
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -23,47 +24,46 @@ Patient patientList3[MAX_PATIENTS];
 
 void readFromDataset(string fileName, Patient patient[]) {
 
-    ifstream file(fileName);
+  ifstream file(fileName);
 
-    if (!file.is_open()) {
-       cerr << "Error: Could not open the file "
-             << fileName << endl;
-        return;
-    }
+  if (!file.is_open()) {
+    cerr << "Error: Could not open the file " << fileName << endl;
+    return;
+  }
 
-    string line;
-    int lineCount = 0;
+  string line;
+  int lineCount = 0;
 
-    // Remove header row
-    getline(file, line);
+  // Remove header row
+  getline(file, line);
 
-    while (getline(file, line) && lineCount < MAX_PATIENTS) {
+  while (getline(file, line) && lineCount < MAX_PATIENTS) {
 
-        stringstream ss(line);
-        string token;
+    stringstream ss(line);
+    string token;
 
-        getline(ss, token, ',');
-        patient[lineCount].PatientID = token;
+    getline(ss, token, ',');
+    patient[lineCount].PatientID = token;
 
-        getline(ss, token, ',');
-        patient[lineCount].age = stoi(token);
+    getline(ss, token, ',');
+    patient[lineCount].age = stoi(token);
 
-        getline(ss, token, ',');
-        patient[lineCount].careType = token;
+    getline(ss, token, ',');
+    patient[lineCount].careType = token;
 
-        getline(ss, token, ',');
-        patient[lineCount].lengthOfStay = stoi(token);
+    getline(ss, token, ',');
+    patient[lineCount].lengthOfStay = stoi(token);
 
-        getline(ss, token, ',');
-        patient[lineCount].baseCostPerHour = stoi(token);
+    getline(ss, token, ',');
+    patient[lineCount].baseCostPerHour = stoi(token);
 
-        getline(ss, token, ',');
-        patient[lineCount].daysVisitsPerYear = stoi(token);
+    getline(ss, token, ',');
+    patient[lineCount].daysVisitsPerYear = stoi(token);
 
-        lineCount++;
-    }
+    lineCount++;
+  }
 
-    file.close();
+  file.close();
 }
 
 void tempPrintArr(Patient arr[]) {
@@ -80,3 +80,43 @@ void tempPrintArr(Patient arr[]) {
          << arr[i].daysVisitsPerYear << endl;
   }
 }
+
+//  0–17: Pediatrics & Adolescents
+//  18–25: Young Adults / University Students
+//  26–45: Working Adults (Early Career)
+//  46–60: Working Adults (Late Career)
+//  61–100: Senior Citizens / Geriatric Care
+Patient sort1[200];
+Patient sort2[200];
+Patient sort3[200];
+Patient sort4[200];
+Patient sort5[200];
+
+void sortIntoCategory(Patient toBeSortList[]) {
+  int arr1Index = 0;
+  int arr2Index = 0;
+  int arr3Index = 0;
+  int arr4Index = 0;
+  int arr5Index = 0;
+
+  for (int i = 0; i < MAX_PATIENTS; i++) {
+    if (toBeSortList[i].age <= 17) {
+      sort1[arr1Index] = toBeSortList[i];
+      arr1Index++;
+    } else if (toBeSortList[i].age <= 25) {
+      sort2[arr2Index] = toBeSortList[i];
+      arr2Index++;
+    } else if (toBeSortList[i].age <= 45) {
+      sort3[arr3Index] = toBeSortList[i];
+      arr3Index++;
+    } else if (toBeSortList[i].age <= 60) {
+      sort4[arr4Index] = toBeSortList[i];
+      arr4Index++;
+    } else if (toBeSortList[i].age <= 100) {
+      sort5[arr5Index] = toBeSortList[i];
+      arr5Index++;
+    }
+  }
+}
+
+int main() {}
