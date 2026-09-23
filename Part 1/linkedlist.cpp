@@ -165,6 +165,80 @@ void sortIntoCategory(Patient toBeSortList[]) {
   }
 }
 
+// FIXME: change from array to linkedlist
+void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
+  int vaccineCounter, rehabCounter, emergencyCounter, outpatientCounter,
+      inpatientCounter, routineCounter;
+  int totalMedicalCostVaccine, totalMedicalCostRehab, totalMedicalCostEmergency,
+      totalMedicalCostOutpatient, totalMedicalCostInpatient,
+      totalMedicalCostRoutine;
+  int vacAvg, rehabAvg, routineAvg, emergencyAvg, outAvg, inAvg;
+  for (int i = 0; i < totalNumberOfPatient; i++) {
+    if (stoi(array[i].PatientID) == 0) {
+      return;
+    } else {
+      int lengthOfStay = array[i].lengthOfStay;
+      int baseCostPerHour = array[i].baseCostPerHour;
+      int daysVisitsPerYear = array[i].daysVisitsPerYear;
+
+      // Count the total medical cost and print out the table
+      if (array[i].careType == "Vaccination") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        vaccineCounter++;
+        totalMedicalCostVaccine +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Rehabilitation") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        rehabCounter++;
+        totalMedicalCostRehab +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Routine Checkup") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        routineCounter++;
+        totalMedicalCostRoutine +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Emergency") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        emergencyCounter++;
+        totalMedicalCostEmergency +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Outpatient") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        outpatientCounter++;
+        totalMedicalCostOutpatient +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Inpatient") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        inpatientCounter++;
+        totalMedicalCostInpatient +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else {
+        cout << "Unknown care type: " << array[i].careType << endl;
+      }
+
+      // Check which care type >0 and calculate avg
+
+      if (vaccineCounter) {
+        vacAvg = totalMedicalCostVaccine / vaccineCounter;
+      }
+      if (rehabCounter) {
+        rehabAvg = totalMedicalCostRehab / rehabCounter;
+      }
+      if (routineCounter) {
+        routineAvg = totalMedicalCostRoutine / routineCounter;
+      }
+      if (emergencyCounter) {
+        emergencyAvg = totalMedicalCostEmergency / emergencyCounter;
+      }
+      if (outpatientCounter) {
+        outAvg = totalMedicalCostOutpatient / outpatientCounter;
+      }
+      if (inpatientCounter) {
+        inAvg = totalMedicalCostInpatient / inpatientCounter;
+      }
+    }
+  }
+}
 int main() {
   readFromDataset(
       "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",

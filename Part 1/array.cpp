@@ -15,13 +15,6 @@ public:
   int daysVisitsPerYear;
 };
 
-class CareType {
-public:
-  string typeOfTreatment;
-  int totalMedicalCost;
-  float average;
-};
-
 const int MAX_PATIENTS = 200;
 
 Patient patientList1[MAX_PATIENTS];
@@ -132,18 +125,16 @@ void sortIntoCategory(Patient toBeSortList[]) {
   }
 }
 
-// FIX: maybe need to create 6 type *3 dataset =18 new caretype variable
-// CareType *dataset1Vaccination = new CareType();
-
 void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
-  int vaccineCounter, rehabCounter, emergencyCounter, outpatientCounter,
-      inpatientCounter, routineCounter;
-  int totalMedicalCostVaccine, totalMedicalCostRehab, totalMedicalCostEmergency,
-      totalMedicalCostOutpatient, totalMedicalCostInpatient,
-      totalMedicalCostRoutine;
-  int vacAvg, rehabAvg, routineAvg, emergencyAvg, outAvg, inAvg;
+  int vaccineCounter = 0, rehabCounter = 0, emergencyCounter = 0,
+      outpatientCounter = 0, inpatientCounter = 0, routineCounter = 0;
+  int totalMedicalCostVaccine = 0, totalMedicalCostRehab = 0,
+      totalMedicalCostEmergency = 0, totalMedicalCostOutpatient = 0,
+      totalMedicalCostInpatient = 0, totalMedicalCostRoutine = 0;
+  int vacAvg = 0, rehabAvg = 0, routineAvg = 0, emergencyAvg = 0, outAvg = 0,
+      inAvg = 0;
   for (int i = 0; i < totalNumberOfPatient; i++) {
-    if (stoi(array[i].PatientID) == 0) {
+    if (array[i].PatientID == "") {
       return;
     } else {
       int lengthOfStay = array[i].lengthOfStay;
@@ -225,6 +216,25 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
     cout << left << setw(15) << "Rehabilitation" << setw(15) << rehabCounter
          << setw(15) << totalMedicalCostRehab << setw(15) << rehabAvg << endl;
   }
+  if (routineCounter != 0) {
+    cout << left << setw(15) << "Routine Checkup" << setw(15) << routineCounter
+         << setw(15) << totalMedicalCostRoutine << setw(15) << routineAvg
+         << endl;
+  }
+  if (emergencyCounter != 0) {
+    cout << left << setw(15) << "Emergency" << setw(15) << emergencyCounter
+         << setw(15) << totalMedicalCostEmergency << setw(15) << emergencyAvg
+         << endl;
+  }
+  if (outpatientCounter != 0) {
+    cout << left << setw(15) << "Outpatient" << setw(15) << outpatientCounter
+         << setw(15) << totalMedicalCostOutpatient << setw(15) << outAvg
+         << endl;
+  }
+  if (inpatientCounter != 0) {
+    cout << left << setw(15) << "Inpatient" << setw(15) << inpatientCounter
+         << setw(15) << totalMedicalCostInpatient << setw(15) << inAvg << endl;
+  }
 }
 
 int main() {
@@ -235,4 +245,25 @@ int main() {
   cout << "Categorised 1" << endl;
   sortIntoCategory(patientList1);
   tempPrintArr(category3);
+
+  cout << "Category 1" << endl;
+  cout << string(80, '-') << endl;
+  mostPreferredCareType(category1, category1Count);
+  cout << endl;
+  cout << "Category 2" << endl;
+  cout << string(80, '-') << endl;
+  mostPreferredCareType(category2, category2Count);
+  cout << endl;
+  cout << "Category 3" << endl;
+  cout << string(80, '-') << endl;
+  mostPreferredCareType(category3, category3Count);
+  cout << endl;
+  cout << "Category 4" << endl;
+  cout << string(80, '-') << endl;
+  mostPreferredCareType(category4, category4Count);
+  cout << endl;
+  cout << "Category 5" << endl;
+  cout << string(80, '-') << endl;
+  mostPreferredCareType(category5, category5Count);
+  cout << endl;
 }
