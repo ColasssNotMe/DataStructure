@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -22,7 +21,7 @@ Patient patientList1[MAX_PATIENTS];
 Patient patientList2[MAX_PATIENTS];
 Patient patientList3[MAX_PATIENTS];
 
-void readFromDataset(string fileName, Patient patient[]) {
+void readFromDataset(string fileName, Patient patientListToBeAppend[]) {
 
   ifstream file(fileName);
 
@@ -43,22 +42,22 @@ void readFromDataset(string fileName, Patient patient[]) {
     string token;
 
     getline(ss, token, ',');
-    patient[lineCount].PatientID = token;
+    patientListToBeAppend[lineCount].PatientID = token;
 
     getline(ss, token, ',');
-    patient[lineCount].age = stoi(token);
+    patientListToBeAppend[lineCount].age = stoi(token);
 
     getline(ss, token, ',');
-    patient[lineCount].careType = token;
+    patientListToBeAppend[lineCount].careType = token;
 
     getline(ss, token, ',');
-    patient[lineCount].lengthOfStay = stoi(token);
+    patientListToBeAppend[lineCount].lengthOfStay = stoi(token);
 
     getline(ss, token, ',');
-    patient[lineCount].baseCostPerHour = stoi(token);
+    patientListToBeAppend[lineCount].baseCostPerHour = stoi(token);
 
     getline(ss, token, ',');
-    patient[lineCount].daysVisitsPerYear = stoi(token);
+    patientListToBeAppend[lineCount].daysVisitsPerYear = stoi(token);
 
     lineCount++;
   }
@@ -100,23 +99,38 @@ void sortIntoCategory(Patient toBeSortList[]) {
   int arr5Index = 0;
 
   for (int i = 0; i < MAX_PATIENTS; i++) {
-    if (toBeSortList[i].age <= 17) {
+    if (toBeSortList[i].age == 0) {
+      return;
+    } else if (toBeSortList[i].age <= 17) {
       sort1[arr1Index] = toBeSortList[i];
       arr1Index++;
+      cout << "pass 1" << endl;
     } else if (toBeSortList[i].age <= 25) {
       sort2[arr2Index] = toBeSortList[i];
       arr2Index++;
+      cout << "pass 2" << endl;
     } else if (toBeSortList[i].age <= 45) {
       sort3[arr3Index] = toBeSortList[i];
       arr3Index++;
+      cout << "pass 3" << endl;
     } else if (toBeSortList[i].age <= 60) {
       sort4[arr4Index] = toBeSortList[i];
       arr4Index++;
+      cout << "pass 4" << sort4[arr4Index - 1].age << endl;
     } else if (toBeSortList[i].age <= 100) {
       sort5[arr5Index] = toBeSortList[i];
       arr5Index++;
+      cout << "pass 5" << endl;
     }
   }
 }
 
-int main() {}
+int main() {
+  readFromDataset(
+      "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
+      patientList1);
+
+  cout << "Categorised 1" << endl;
+  sortIntoCategory(patientList1);
+  tempPrintArr(sort3);
+}

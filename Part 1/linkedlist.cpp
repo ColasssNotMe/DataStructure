@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// Class
 class Patient {
 public:
   string PatientID;
@@ -16,21 +17,20 @@ public:
   int daysVisitsPerYear;
 };
 
-const int MAX_PATIENTS = 200;
-Patient patientList1[MAX_PATIENTS];
-Patient patientList2[MAX_PATIENTS];
-Patient patientList3[MAX_PATIENTS];
-
 class PatientNode {
 public:
   PatientNode(Patient patientParam) {
     patient = patientParam;
     nextPatient = nullptr;
   }
-
   Patient patient;
   PatientNode *nextPatient;
 };
+
+const int MAX_PATIENTS = 200;
+Patient patientList1[MAX_PATIENTS];
+Patient patientList2[MAX_PATIENTS];
+Patient patientList3[MAX_PATIENTS];
 
 void readFromDataset(string fileName, Patient patient[]) {
 
@@ -77,14 +77,10 @@ void readFromDataset(string fileName, Patient patient[]) {
 }
 
 PatientNode *convertToLinkedList(Patient patient[]) {
-
   PatientNode *head = nullptr;
   PatientNode *next = nullptr;
-
   for (int i = 0; i < MAX_PATIENTS; i++) {
-
     PatientNode *temp = new PatientNode(patient[i]);
-
     if (head == nullptr) {
       head = temp;
       next = temp;
@@ -93,12 +89,12 @@ PatientNode *convertToLinkedList(Patient patient[]) {
       next = temp;
     }
   }
-
   return head;
 }
 
 // FIXME: remove this later
 void tempPrintNode(PatientNode *patientNode) {
+
   cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
        << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
        << setw(15) << "Visits/Year" << endl;
@@ -117,9 +113,64 @@ void tempPrintNode(PatientNode *patientNode) {
     current = current->nextPatient;
   }
 }
+void addToList(PatientNode *&head, Patient patient) {
+  PatientNode *newNode = new PatientNode(patient);
+
+  if (head == nullptr) {
+    head = newNode;
+    return;
+  }
+
+  PatientNode *current = head;
+
+  while (current->nextPatient != nullptr) {
+    current = current->nextPatient;
+  }
+
+  current->nextPatient = newNode;
+}
+//  0–17: Pediatrics & Adolescents
+//  18–25: Young Adults / University Students
+//  26–45: Working Adults (Early Career)
+//  46–60: Working Adults (Late Career)
+//  61–100: Senior Citizens / Geriatric Care
+PatientNode *sort1 = nullptr;
+PatientNode *sort2 = nullptr;
+PatientNode *sort3 = nullptr;
+PatientNode *sort4 = nullptr;
+PatientNode *sort5 = nullptr;
+
+// FIXME: uncomplete linked list implementation
+void sortIntoCategory(Patient toBeSortList[]) {
+  PatientNode *temp = nullptr;
+  for (int i = 0; i < MAX_PATIENTS; i++) {
+    if (toBeSortList[i].age == 0) {
+      return;
+    } else if (toBeSortList[i].age <= 17) {
+      addToList(sort1, toBeSortList[i]);
+      cout << "pass 1" << endl;
+    } else if (toBeSortList[i].age <= 25) {
+      addToList(sort2, toBeSortList[i]);
+      cout << "pass 2" << endl;
+    } else if (toBeSortList[i].age <= 45) {
+      addToList(sort3, toBeSortList[i]);
+      cout << "pass 3" << endl;
+    } else if (toBeSortList[i].age <= 60) {
+      addToList(sort4, toBeSortList[i]);
+      cout << "pass 4" << endl;
+    } else if (toBeSortList[i].age <= 100) {
+      addToList(sort5, toBeSortList[i]);
+      cout << "pass 5" << endl;
+    }
+  }
+}
 
 int main() {
   readFromDataset(
       "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
       patientList1);
+
+  sortIntoCategory(patientList1);
+
+  tempPrintNode(sort3);
 }
