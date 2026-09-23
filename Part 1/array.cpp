@@ -15,6 +15,13 @@ public:
   int daysVisitsPerYear;
 };
 
+class CareType {
+public:
+  string typeOfTreatment;
+  int totalMedicalCost;
+  float average;
+};
+
 const int MAX_PATIENTS = 200;
 
 Patient patientList1[MAX_PATIENTS];
@@ -85,43 +92,138 @@ void tempPrintArr(Patient arr[]) {
 //  26–45: Working Adults (Early Career)
 //  46–60: Working Adults (Late Career)
 //  61–100: Senior Citizens / Geriatric Care
-Patient sort1[200];
-Patient sort2[200];
-Patient sort3[200];
-Patient sort4[200];
-Patient sort5[200];
+Patient category1[200];
+Patient category2[200];
+Patient category3[200];
+Patient category4[200];
+Patient category5[200];
+
+int category1Count = 0;
+int category2Count = 0;
+int category3Count = 0;
+int category4Count = 0;
+int category5Count = 0;
 
 void sortIntoCategory(Patient toBeSortList[]) {
-  int arr1Index = 0;
-  int arr2Index = 0;
-  int arr3Index = 0;
-  int arr4Index = 0;
-  int arr5Index = 0;
-
   for (int i = 0; i < MAX_PATIENTS; i++) {
     if (toBeSortList[i].age == 0) {
       return;
     } else if (toBeSortList[i].age <= 17) {
-      sort1[arr1Index] = toBeSortList[i];
-      arr1Index++;
+      category1[category1Count] = toBeSortList[i];
+      category1Count++;
       cout << "pass 1" << endl;
     } else if (toBeSortList[i].age <= 25) {
-      sort2[arr2Index] = toBeSortList[i];
-      arr2Index++;
+      category2[category2Count] = toBeSortList[i];
+      category2Count++;
       cout << "pass 2" << endl;
     } else if (toBeSortList[i].age <= 45) {
-      sort3[arr3Index] = toBeSortList[i];
-      arr3Index++;
+      category3[category3Count] = toBeSortList[i];
+      category3Count++;
       cout << "pass 3" << endl;
     } else if (toBeSortList[i].age <= 60) {
-      sort4[arr4Index] = toBeSortList[i];
-      arr4Index++;
-      cout << "pass 4" << sort4[arr4Index - 1].age << endl;
+      category4[category4Count] = toBeSortList[i];
+      category4Count++;
+      cout << "pass 4" << category4[category4Count - 1].age << endl;
     } else if (toBeSortList[i].age <= 100) {
-      sort5[arr5Index] = toBeSortList[i];
-      arr5Index++;
+      category5[category5Count] = toBeSortList[i];
+      category5Count++;
       cout << "pass 5" << endl;
     }
+  }
+}
+
+// FIX: maybe need to create 6 type *3 dataset =18 new caretype variable
+// CareType *dataset1Vaccination = new CareType();
+
+void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
+  int vaccineCounter, rehabCounter, emergencyCounter, outpatientCounter,
+      inpatientCounter, routineCounter;
+  int totalMedicalCostVaccine, totalMedicalCostRehab, totalMedicalCostEmergency,
+      totalMedicalCostOutpatient, totalMedicalCostInpatient,
+      totalMedicalCostRoutine;
+  int vacAvg, rehabAvg, routineAvg, emergencyAvg, outAvg, inAvg;
+  for (int i = 0; i < totalNumberOfPatient; i++) {
+    if (stoi(array[i].PatientID) == 0) {
+      return;
+    } else {
+      int lengthOfStay = array[i].lengthOfStay;
+      int baseCostPerHour = array[i].baseCostPerHour;
+      int daysVisitsPerYear = array[i].daysVisitsPerYear;
+
+      // Count the total medical cost and print out the table
+      if (array[i].careType == "Vaccination") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        vaccineCounter++;
+        totalMedicalCostVaccine +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Rehabilitation") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        rehabCounter++;
+        totalMedicalCostRehab +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Routine Checkup") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        routineCounter++;
+        totalMedicalCostRoutine +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Emergency") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        emergencyCounter++;
+        totalMedicalCostEmergency +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Outpatient") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        outpatientCounter++;
+        totalMedicalCostOutpatient +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else if (array[i].careType == "Inpatient") {
+        int totalCost = lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+        inpatientCounter++;
+        totalMedicalCostInpatient +=
+            lengthOfStay * baseCostPerHour * daysVisitsPerYear;
+      } else {
+        cout << "Unknown care type: " << array[i].careType << endl;
+      }
+
+      // Check which care type >0 and calculate avg
+
+      if (vaccineCounter) {
+        vacAvg = totalMedicalCostVaccine / vaccineCounter;
+      }
+      if (rehabCounter) {
+        rehabAvg = totalMedicalCostRehab / rehabCounter;
+      }
+      if (routineCounter) {
+        routineAvg = totalMedicalCostRoutine / routineCounter;
+      }
+      if (emergencyCounter) {
+        emergencyAvg = totalMedicalCostEmergency / emergencyCounter;
+      }
+      if (outpatientCounter) {
+        outAvg = totalMedicalCostOutpatient / outpatientCounter;
+      }
+      if (inpatientCounter) {
+        inAvg = totalMedicalCostInpatient / inpatientCounter;
+      }
+    }
+  }
+
+  // Print the result
+  cout << left << setw(15) << "Care Type" << setw(15) << "Patient Count"
+       << setw(15) << "Total Cost ($)" << setw(15)
+       << "Average Cost per Patient ($)" << endl;
+
+  cout << string(80, '-') << endl;
+
+  // TODO: havent done, prob need to sort based on patient count
+  int totalBillingForAgeGroup = 0;
+  if (vaccineCounter != 0) {
+    cout << left << setw(15) << "Vaccination" << setw(15) << vaccineCounter
+         << setw(15) << totalMedicalCostVaccine << setw(15) << vacAvg << endl;
+  }
+  if (rehabCounter != 0) {
+    cout << left << setw(15) << "Rehabilitation" << setw(15) << rehabCounter
+         << setw(15) << totalMedicalCostRehab << setw(15) << rehabAvg << endl;
   }
 }
 
@@ -132,5 +234,5 @@ int main() {
 
   cout << "Categorised 1" << endl;
   sortIntoCategory(patientList1);
-  tempPrintArr(sort3);
+  tempPrintArr(category3);
 }

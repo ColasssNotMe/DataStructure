@@ -134,11 +134,11 @@ void addToList(PatientNode *&head, Patient patient) {
 //  26–45: Working Adults (Early Career)
 //  46–60: Working Adults (Late Career)
 //  61–100: Senior Citizens / Geriatric Care
-PatientNode *sort1 = nullptr;
-PatientNode *sort2 = nullptr;
-PatientNode *sort3 = nullptr;
-PatientNode *sort4 = nullptr;
-PatientNode *sort5 = nullptr;
+PatientNode *category1 = nullptr;
+PatientNode *category2 = nullptr;
+PatientNode *category3 = nullptr;
+PatientNode *category4 = nullptr;
+PatientNode *category5 = nullptr;
 
 // FIXME: uncomplete linked list implementation
 void sortIntoCategory(Patient toBeSortList[]) {
@@ -147,19 +147,19 @@ void sortIntoCategory(Patient toBeSortList[]) {
     if (toBeSortList[i].age == 0) {
       return;
     } else if (toBeSortList[i].age <= 17) {
-      addToList(sort1, toBeSortList[i]);
+      addToList(category1, toBeSortList[i]);
       cout << "pass 1" << endl;
     } else if (toBeSortList[i].age <= 25) {
-      addToList(sort2, toBeSortList[i]);
+      addToList(category2, toBeSortList[i]);
       cout << "pass 2" << endl;
     } else if (toBeSortList[i].age <= 45) {
-      addToList(sort3, toBeSortList[i]);
+      addToList(category3, toBeSortList[i]);
       cout << "pass 3" << endl;
     } else if (toBeSortList[i].age <= 60) {
-      addToList(sort4, toBeSortList[i]);
+      addToList(category4, toBeSortList[i]);
       cout << "pass 4" << endl;
     } else if (toBeSortList[i].age <= 100) {
-      addToList(sort5, toBeSortList[i]);
+      addToList(category5, toBeSortList[i]);
       cout << "pass 5" << endl;
     }
   }
@@ -172,5 +172,5 @@ int main() {
 
   sortIntoCategory(patientList1);
 
-  tempPrintNode(sort3);
+  tempPrintNode(category3);
 }
