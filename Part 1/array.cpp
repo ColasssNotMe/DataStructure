@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -21,10 +22,14 @@ Patient patientList1[MAX_PATIENTS];
 Patient patientList2[MAX_PATIENTS];
 Patient patientList3[MAX_PATIENTS];
 
+// helper function
+double totalMedicalCost(Patient patient) {
+  return patient.lengthOfStay * patient.baseCostPerHour *
+         patient.daysVisitsPerYear;
+}
+
 void readFromDataset(string fileName, Patient patientListToBeAppend[]) {
-
   ifstream file(fileName);
-
   if (!file.is_open()) {
     cerr << "Error: Could not open the file " << fileName << endl;
     return;
@@ -37,28 +42,20 @@ void readFromDataset(string fileName, Patient patientListToBeAppend[]) {
   getline(file, line);
 
   while (getline(file, line) && lineCount < MAX_PATIENTS) {
-
     stringstream ss(line);
     string token;
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].PatientID = token;
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].age = stoi(token);
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].careType = token;
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].lengthOfStay = stoi(token);
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].baseCostPerHour = stoi(token);
-
     getline(ss, token, ',');
     patientListToBeAppend[lineCount].daysVisitsPerYear = stoi(token);
-
     lineCount++;
   }
 
@@ -79,6 +76,7 @@ void tempPrintArr(Patient arr[]) {
          << arr[i].daysVisitsPerYear << endl;
   }
 }
+// end of helper section
 
 //  0–17: Pediatrics & Adolescents
 //  18–25: Young Adults / University Students
@@ -211,29 +209,73 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
   if (vaccineCounter != 0) {
     cout << left << setw(15) << "Vaccination" << setw(15) << vaccineCounter
          << setw(15) << totalMedicalCostVaccine << setw(15) << vacAvg << endl;
+    totalBillingForAgeGroup += totalMedicalCostVaccine;
   }
   if (rehabCounter != 0) {
     cout << left << setw(15) << "Rehabilitation" << setw(15) << rehabCounter
          << setw(15) << totalMedicalCostRehab << setw(15) << rehabAvg << endl;
+    totalBillingForAgeGroup += totalMedicalCostRehab;
   }
   if (routineCounter != 0) {
     cout << left << setw(15) << "Routine Checkup" << setw(15) << routineCounter
          << setw(15) << totalMedicalCostRoutine << setw(15) << routineAvg
          << endl;
+    totalBillingForAgeGroup += totalMedicalCostRoutine;
   }
   if (emergencyCounter != 0) {
     cout << left << setw(15) << "Emergency" << setw(15) << emergencyCounter
          << setw(15) << totalMedicalCostEmergency << setw(15) << emergencyAvg
          << endl;
+    totalBillingForAgeGroup += totalMedicalCostEmergency;
   }
   if (outpatientCounter != 0) {
     cout << left << setw(15) << "Outpatient" << setw(15) << outpatientCounter
          << setw(15) << totalMedicalCostOutpatient << setw(15) << outAvg
          << endl;
+    totalBillingForAgeGroup += totalMedicalCostOutpatient;
   }
   if (inpatientCounter != 0) {
     cout << left << setw(15) << "Inpatient" << setw(15) << inpatientCounter
          << setw(15) << totalMedicalCostInpatient << setw(15) << inAvg << endl;
+    totalBillingForAgeGroup += totalMedicalCostInpatient;
+  }
+  cout << string(80, '-') << endl;
+  cout << "Total Billing for Current Age Group: " << totalBillingForAgeGroup
+       << endl;
+}
+
+void sortByBubble(Patient patientList[], string fieldToBeCompare,
+                  int patientCount) {
+  for (int i = 0; i < patientCount - 2; i++) {
+    bool swapped = false;
+
+    for (int j = 0; j < patientCount - 2 - i; j++) {
+      if (fieldToBeCompare == "age") {
+        if (patientList[j].age > patientList[j + 1].age) {
+          swap(patientList[j], patientList[j + 1]);
+          swapped = true;
+        }
+      }
+
+      if (fieldToBeCompare == "lengthOfStay") {
+        if (patientList[j].lengthOfStay > patientList[j + 1].lengthOfStay) {
+          swap(patientList[j], patientList[j + 1]);
+          swapped = true;
+        }
+      }
+
+      if (fieldToBeCompare == "totalMedicalCost") {
+        if (totalMedicalCost(patientList[j]) >
+            totalMedicalCost(patientList[j + 1])) {
+          swap(patientList[j], patientList[j + 1]);
+          swapped = true;
+        }
+      }
+    }
+
+    if (not swapped) {
+      return;
+    }
   }
 }
 
@@ -266,4 +308,8 @@ int main() {
   cout << string(80, '-') << endl;
   mostPreferredCareType(category5, category5Count);
   cout << endl;
+
+  // Sorted
+  sortByBubble(category3, "age", category3Count);
+  tempPrintArr(category3);
 }
