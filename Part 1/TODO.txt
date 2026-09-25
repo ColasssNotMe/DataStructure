@@ -11,4 +11,8 @@ done until 6(b)
 **linked list**:
 the caretype print out is not sorted according to most to least
 
+done implement bubble sort
+
+same progress as array
+
 done until 5(d)

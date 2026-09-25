@@ -117,6 +117,13 @@ void readFromDataset(string fileName, PatientNode *&head) {
   file.close();
 }
 
+double totalMedicalCost(PatientNode *&patient) {
+  return patient->patient.lengthOfStay * patient->patient.baseCostPerHour *
+         patient->patient.daysVisitsPerYear;
+}
+
+// ---end of helper function---
+
 // FIXME: remove this later
 void tempPrintNode(PatientNode *patientNode) {
 
@@ -310,6 +317,54 @@ void mostPreferredCareType(PatientNode *&head) {
        << endl;
 }
 
+void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
+  if (head == nullptr || head->nextPatient == nullptr) {
+    cerr << "Unable to execute sortByBubble: "
+         << "head is null or next patient is null" << endl;
+    return;
+  }
+
+  bool swapped;
+
+  do {
+    swapped = false; 
+
+    PatientNode *current = head;
+
+    while (current->nextPatient != nullptr) {
+
+      PatientNode *next = current->nextPatient;
+
+      if (fieldToBeCompare == "age") {
+
+        if (current->patient.age > next->patient.age) {
+          swap(current->patient, next->patient);
+          swapped = true;
+        }
+
+      } else if (fieldToBeCompare == "lengthOfStay") {
+
+        if (current->patient.lengthOfStay > next->patient.lengthOfStay) {
+
+          swap(current->patient, next->patient);
+          swapped = true;
+        }
+
+      } else if (fieldToBeCompare == "totalMedicalCost") {
+
+        if (totalMedicalCost(current) > totalMedicalCost(next)) {
+
+          swap(current->patient, next->patient);
+          swapped = true;
+        }
+      }
+
+      current = current->nextPatient;
+    }
+
+  } while (swapped);
+}
+
 int main() {
   readFromDataset(
       "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
@@ -318,6 +373,13 @@ int main() {
   sortIntoCategory(patientNode1);
 
   mostPreferredCareType(category4);
+
+  tempPrintNode(category4);
+  cout << endl;
+  cout << endl;
+  cout << endl;
+  cout << "Sort bubble" << endl;
+  sortByBubble(category4, "age");
 
   tempPrintNode(category4);
 }
