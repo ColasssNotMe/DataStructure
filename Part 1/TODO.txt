@@ -1,0 +1,14 @@
+**array**:
+5(c) dk what to do :
+done implement bubble sort, maybe can implement more
+havent implement time complexity and memory usage, display result
+the caretype print out is not sorted according to most to least
+
+done until 6(b)
+
+
+
+**linked list**:
+the caretype print out is not sorted according to most to least
+
+done until 5(d)

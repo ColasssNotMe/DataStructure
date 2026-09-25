@@ -204,7 +204,6 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
 
   cout << string(80, '-') << endl;
 
-  // TODO: havent done, prob need to sort based on patient count
   int totalBillingForAgeGroup = 0;
   if (vaccineCounter != 0) {
     cout << left << setw(15) << "Vaccination" << setw(15) << vaccineCounter
