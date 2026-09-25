@@ -15,4 +15,4 @@ done implement bubble sort
 
 same progress as array
 
-done until 5(d)
+done until 6(b)
