@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -18,9 +19,7 @@ public:
 
 const int MAX_PATIENTS = 200;
 
-Patient patientList1[MAX_PATIENTS];
-Patient patientList2[MAX_PATIENTS];
-Patient patientList3[MAX_PATIENTS];
+Patient patientList[MAX_PATIENTS];
 
 // helper function
 double totalMedicalCost(Patient patient) {
@@ -102,23 +101,18 @@ void sortIntoCategory(Patient toBeSortList[]) {
     } else if (toBeSortList[i].age <= 17) {
       category1[category1Count] = toBeSortList[i];
       category1Count++;
-      cout << "pass 1" << endl;
     } else if (toBeSortList[i].age <= 25) {
       category2[category2Count] = toBeSortList[i];
       category2Count++;
-      cout << "pass 2" << endl;
     } else if (toBeSortList[i].age <= 45) {
       category3[category3Count] = toBeSortList[i];
       category3Count++;
-      cout << "pass 3" << endl;
     } else if (toBeSortList[i].age <= 60) {
       category4[category4Count] = toBeSortList[i];
       category4Count++;
-      cout << "pass 4" << category4[category4Count - 1].age << endl;
     } else if (toBeSortList[i].age <= 100) {
       category5[category5Count] = toBeSortList[i];
       category5Count++;
-      cout << "pass 5" << endl;
     }
   }
 }
@@ -245,7 +239,7 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
 
 void sortByBubble(Patient patientList[], string fieldToBeCompare,
                   int patientCount) {
-  for (int i = 0; i < patientCount - 2; i++) {
+  for (int i = 0; i < patientCount - 1; i++) {
     bool swapped = false;
 
     for (int j = 0; j < patientCount - 2 - i; j++) {
@@ -279,36 +273,139 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
 }
 
 int main() {
-  readFromDataset(
-      "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
-      patientList1);
 
-  cout << "Categorised 1" << endl;
-  sortIntoCategory(patientList1);
-  tempPrintArr(category3);
+  string selection = "";
 
+  // ----Start of menu---
+  cout << string(80, '=') << endl;
+  cout << "Please enter absolute path, or input 1,2 or 3" << endl;
+  cout << "1. Dataset 1" << endl;
+  cout << "2. Dataset 2" << endl;
+  cout << "3. Dataset 3" << endl;
+
+  cin >> selection;
+
+  if (selection == "1") {
+    readFromDataset("dataset1 facility_a.csv", patientList);
+  } else if (selection == "2") {
+    readFromDataset("dataset2 facility_a.csv", patientList);
+  } else if (selection == "3") {
+    readFromDataset("dataset3 facility_a.csv", patientList);
+  } else {
+    readFromDataset(selection, patientList);
+  }
+
+  // ---End of menu---
+
+  cout << string(80, '=') << endl;
+  cout << "Categorizing..." << endl << endl;
+  sortIntoCategory(patientList);
+
+  cout << string(80, '-') << endl;
   cout << "Category 1" << endl;
   cout << string(80, '-') << endl;
   mostPreferredCareType(category1, category1Count);
-  cout << endl;
+  cout << endl << endl;
+  cout << string(80, '-') << endl;
   cout << "Category 2" << endl;
   cout << string(80, '-') << endl;
   mostPreferredCareType(category2, category2Count);
-  cout << endl;
+  cout << endl << endl;
+  cout << string(80, '-') << endl;
   cout << "Category 3" << endl;
   cout << string(80, '-') << endl;
   mostPreferredCareType(category3, category3Count);
-  cout << endl;
+  cout << endl << endl;
+  cout << string(80, '-') << endl;
   cout << "Category 4" << endl;
   cout << string(80, '-') << endl;
   mostPreferredCareType(category4, category4Count);
-  cout << endl;
+  cout << endl << endl;
+  cout << string(80, '-') << endl;
   cout << "Category 5" << endl;
   cout << string(80, '-') << endl;
   mostPreferredCareType(category5, category5Count);
-  cout << endl;
+  cout << endl << endl;
 
-  // Sorted
-  sortByBubble(category3, "age", category3Count);
-  tempPrintArr(category3);
+  // --Start of menu--
+  string sortSelection = "";
+  string categorySelection = "";
+  string fieldSelection = "";
+
+  Patient *category = nullptr;
+  int categoryCount = 0;
+  string field = "";
+
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Select sorting algorithm" << endl;
+    cout << "1. Bubble Sort" << endl;
+    // cout << "2. -" << endl;
+    cin >> sortSelection;
+  } while (sortSelection == "" &&
+           (sortSelection != "1" || sortSelection != "2"));
+
+  cout << string(80, '-') << endl;
+
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Select category to be sorted" << endl;
+    cout << "1. Category 1" << endl;
+    cout << "2. Category 2" << endl;
+    cout << "3. Category 3" << endl;
+    cout << "4. Category 4" << endl;
+    cout << "5. Category 5" << endl;
+    cin >> categorySelection;
+  } while (categorySelection == "" &&
+           (categorySelection != "1" || categorySelection != "2" ||
+            categorySelection != "3" || categorySelection != "4" ||
+            categorySelection != "5"));
+
+  cout << string(80, '-') << endl;
+  if (categorySelection == "1") {
+    category = category1;
+    categoryCount = category1Count;
+  } else if (categorySelection == "2") {
+    category = category2;
+    categoryCount = category2Count;
+  } else if (categorySelection == "3") {
+    category = category3;
+    categoryCount = category3Count;
+  } else if (categorySelection == "4") {
+    category = category4;
+    categoryCount = category4Count;
+  } else if (categorySelection == "5") {
+    category = category5;
+    categoryCount = category5Count;
+  }
+
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Select field to be sorted" << endl;
+    cout << "1. Age" << endl;
+    cout << "2. Visit Duration (Length of Stay)" << endl;
+    cout << "3. Total Medical Cost" << endl;
+    cin >> fieldSelection;
+  } while (fieldSelection == "" &&
+           (fieldSelection != "1" || fieldSelection != "2" ||
+            fieldSelection != "3"));
+
+  if (fieldSelection == "1") {
+    field = "age";
+  } else if (fieldSelection == "2") {
+    field = "lengthOfStay";
+  } else if (fieldSelection == "3") {
+    field = "totalMedicalCost";
+  }
+
+  if (sortSelection == "1") {
+    sortByBubble(category, field, categoryCount);
+    tempPrintArr(category);
+    cout << string(80, '-') << endl;
+  } else if (selection == "2") {
+    // TODO: add sorting algo here
+  }
+
+  cout << string(80, '-') << endl;
+  // ---End of menu---
 }
