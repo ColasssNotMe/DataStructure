@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -29,8 +30,24 @@ public:
 };
 
 const int MAX_PATIENTS = 200;
-PatientNode *patientNode;
-PatientNode *unsortedPatientNode;
+
+PatientNode *patientNode = nullptr;
+PatientNode *unsortedPatientNode = nullptr;
+PatientNode *searchResult = nullptr;
+
+// remembered so the Search menu can re-load the file for "sorted data"
+string datasetFileName = "";
+
+//  0–17: Pediatrics & Adolescents
+//  18–25: Young Adults / University Students
+//  26–45: Working Adults (Early Career)
+//  46–60: Working Adults (Late Career)
+//  61–100: Senior Citizens / Geriatric Care
+PatientNode *category1 = nullptr;
+PatientNode *category2 = nullptr;
+PatientNode *category3 = nullptr;
+PatientNode *category4 = nullptr;
+PatientNode *category5 = nullptr;
 
 // helper function
 void insertToEnd(PatientNode *&head, Patient patient) {
@@ -71,6 +88,17 @@ void insertToEnd(PatientNode *&head, PatientNode *&patient) {
 
   // make the newly created node.nextpatient to become the patient to be insert
   current->nextPatient = patient;
+}
+
+// FIX: added — deletes every node in a list and resets the head to nullptr.
+// Needed so searchResult can be cleared between searches and patientNode
+// can be safely re-loaded for the "sorted data" search.
+void freeList(PatientNode *&head) {
+  while (head != nullptr) {
+    PatientNode *next = head->nextPatient;
+    delete head;
+    head = next;
+  }
 }
 
 void readFromDataset(string fileName, PatientNode *&head) {
@@ -123,7 +151,6 @@ double totalMedicalCost(PatientNode *&patient) {
 
 // ---end of helper function---
 
-// FIXME: remove this later
 void tempPrintNode(PatientNode *patientNode) {
 
   cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
@@ -145,23 +172,13 @@ void tempPrintNode(PatientNode *patientNode) {
   }
 }
 
-//  0–17: Pediatrics & Adolescents
-//  18–25: Young Adults / University Students
-//  26–45: Working Adults (Early Career)
-//  46–60: Working Adults (Late Career)
-//  61–100: Senior Citizens / Geriatric Care
-PatientNode *category1 = nullptr;
-PatientNode *category2 = nullptr;
-PatientNode *category3 = nullptr;
-PatientNode *category4 = nullptr;
-PatientNode *category5 = nullptr;
-
 void sortIntoCategory(PatientNode *&head) {
   PatientNode *current = nullptr;
   PatientNode *nextHead = nullptr;
 
   if (head == nullptr) {
     cerr << "Unable to sort into category: Node empty" << endl;
+    return;
   }
   current = head;
   while (current != nullptr) {
@@ -170,26 +187,22 @@ void sortIntoCategory(PatientNode *&head) {
     // remove the old next patient so it doesnt connect to 2 node
     current->nextPatient = nullptr;
 
-    if (current->patient.age == 0) {
-      return;
-    } else if (current->patient.age <= 17) {
+    if (current->patient.age <= 17) {
       insertToEnd(category1, current);
-      // cout << "pass 1" << endl;
     } else if (current->patient.age <= 25) {
       insertToEnd(category2, current);
-      // cout << "pass 2" << endl;
     } else if (current->patient.age <= 45) {
       insertToEnd(category3, current);
-      // cout << "pass 3" << endl;
     } else if (current->patient.age <= 60) {
       insertToEnd(category4, current);
-      // cout << "pass 4" << endl;
     } else if (current->patient.age <= 100) {
       insertToEnd(category5, current);
-      // cout << "pass 5" << endl;
     }
     current = nextHead;
   }
+
+  head = nullptr;
+
   cout << "Sort into category done" << endl;
 }
 
@@ -205,6 +218,7 @@ void mostPreferredCareType(PatientNode *&head) {
 
   if (head == nullptr) {
     cerr << "Unable to execute mostPreferredCareType: head is null" << endl;
+    return;
   }
 
   PatientNode *current = head;
@@ -323,6 +337,8 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
     return;
   }
 
+  auto start = chrono::high_resolution_clock::now();
+
   bool swapped;
 
   do {
@@ -362,19 +378,26 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
     }
 
   } while (swapped);
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << string(80, '*') << endl;
+  cout << "Sorting took " << duration.count() << " microseconds" << endl;
+  cout << string(80, '*') << endl;
 }
 
-PatientNode *searchResult = nullptr;
-// TODO: check implementation
-void searchUsingLinear(PatientNode *&head, int category = 1,
-                       int visitDuration = 0, float totalMedicalCost = 0.0) {
+int searchUsingLinear(PatientNode *&head, int category = 1,
+                      int visitDuration = 0, float totalMedicalCost = 0.0) {
 
   PatientNode *current = nullptr;
 
   if (head == nullptr) {
-    cerr << "The Patient is empty [searchUsingLinear]";
-    return;
+    cerr << "The Patient is empty [searchUsingLinear]" << endl;
+    return 0;
   }
+
+  freeList(searchResult);
+
   int counter = 0;
   int minAge = 0;
   int maxAge = 100;
@@ -391,6 +414,9 @@ void searchUsingLinear(PatientNode *&head, int category = 1,
   } else if (category == 4) {
     minAge = 46;
     maxAge = 60;
+  } else if (category == 5) {
+    minAge = 61;
+    maxAge = 100;
   }
 
   if (current == nullptr) {
@@ -405,7 +431,7 @@ void searchUsingLinear(PatientNode *&head, int category = 1,
                                current->patient.daysVisitsPerYear;
     if (current->patient.age >= minAge && current->patient.age <= maxAge &&
         current->patient.lengthOfStay > visitDuration &&
-        calculateMedicalCost < totalMedicalCost) {
+        (totalMedicalCost <= 0 || calculateMedicalCost < totalMedicalCost)) {
       PatientNode *newNode = new PatientNode(current->patient);
 
       if (searchResult == nullptr) {
@@ -416,13 +442,20 @@ void searchUsingLinear(PatientNode *&head, int category = 1,
         while (temp->nextPatient != nullptr) {
           temp = temp->nextPatient;
         }
-        searchResult->nextPatient = newNode;
+        temp->nextPatient = newNode;
       }
+      counter++;
     }
+
+    current = current->nextPatient;
   }
+
+  return counter;
 }
 
-int main() {
+// Menus
+
+void datasetMenu() {
   string selection = "";
 
   cout << string(80, '=') << endl;
@@ -438,52 +471,20 @@ int main() {
   cin >> selection;
 
   if (selection == "1") {
-    readFromDataset("dataset1_facility_a.csv", patientNode);
+    datasetFileName = "dataset1_facility_a.csv";
   } else if (selection == "2") {
-    readFromDataset("dataset2_facility_b.csv", patientNode);
+    datasetFileName = "dataset2_facility_b.csv";
   } else if (selection == "3") {
-    readFromDataset("dataset3_facility_c.csv", patientNode);
+    datasetFileName = "dataset3_facility_c.csv";
   } else {
-    readFromDataset(selection, patientNode);
+    datasetFileName = selection;
   }
 
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Categorizing..." << endl;
-  cout << string(80, '=') << endl;
+  readFromDataset(datasetFileName, patientNode);
+  readFromDataset(datasetFileName, unsortedPatientNode);
+}
 
-  sortIntoCategory(patientNode);
-
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Category 1" << endl;
-  cout << string(80, '=') << endl;
-  mostPreferredCareType(category1);
-
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Category 2" << endl;
-  cout << string(80, '=') << endl;
-  mostPreferredCareType(category2);
-
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Category 3" << endl;
-  cout << string(80, '=') << endl;
-  mostPreferredCareType(category3);
-
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Category 4" << endl;
-  cout << string(80, '=') << endl;
-  mostPreferredCareType(category4);
-
-  cout << endl;
-  cout << string(80, '=') << endl;
-  cout << "Category 5" << endl;
-  cout << string(80, '=') << endl;
-  mostPreferredCareType(category5);
-
+void sortMenu() {
   string sortSelection = "";
   string categorySelection = "";
   string fieldSelection = "";
@@ -532,8 +533,6 @@ int main() {
     category = category4;
   } else if (categorySelection == "5") {
     category = category5;
-  } else if (categorySelection == "6") {
-    category = patientNode;
   }
 
   cout << endl;
@@ -563,11 +562,175 @@ int main() {
   cout << string(80, '=') << endl;
 
   if (sortSelection == "1") {
-    sortByBubble(category, field);
-    tempPrintNode(category);
+    if (categorySelection == "6") {
+      sortByBubble(category1, field);
+      sortByBubble(category2, field);
+      sortByBubble(category3, field);
+      sortByBubble(category4, field);
+      sortByBubble(category5, field);
+    } else {
+      sortByBubble(category, field);
+      tempPrintNode(category);
+    }
+  }
+}
+
+void searchMenu() {
+  string searchSelection = "";
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Search" << endl;
+    cout << string(80, '=') << endl;
+    cout << "Select 1 data from below" << endl;
+    cout << "1. Unsorted Data" << endl;
+    cout << "2. Sorted Data" << endl;
+    cout << "Selection: ";
+    cin >> searchSelection;
+  } while (searchSelection != "1" && searchSelection != "2");
+
+  string searchCategory = "";
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Search" << endl;
+    cout << string(80, '=') << endl;
+    cout << "Enter age group" << endl;
+    cout << "1. Category 1 (0-17)" << endl;
+    cout << "2. Category 2 (18-25)" << endl;
+    cout << "3. Category 3 (26-45)" << endl;
+    cout << "4. Category 4 (46-60)" << endl;
+    cout << "5. Category 5 (61-100)" << endl;
+    cout << "Selection: ";
+    cin >> searchCategory;
+  } while (searchCategory != "1" && searchCategory != "2" &&
+           searchCategory != "3" && searchCategory != "4" &&
+           searchCategory != "5");
+
+  int found = 0;
+
+  if (searchSelection == "1") {
+    found = searchUsingLinear(unsortedPatientNode, stoi(searchCategory));
+  } else {
+    freeList(patientNode);
+    readFromDataset(datasetFileName, patientNode);
+    sortByBubble(patientNode, "age");
+    found = searchUsingLinear(patientNode, stoi(searchCategory));
   }
 
+  cout << "Found " << found << " patient(s)." << endl;
+  if (found > 0) {
+    tempPrintNode(searchResult);
+  }
+}
+
+void printMenu() {
+  string printSelection = "";
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Print List" << endl;
+    cout << string(80, '=') << endl;
+    cout << "Select 1 data from below" << endl;
+    cout << "1. Unsorted Data" << endl;
+    cout << "2. Main Patient List" << endl;
+    cout << "3. Category 1" << endl;
+    cout << "4. Category 2" << endl;
+    cout << "5. Category 3" << endl;
+    cout << "6. Category 4" << endl;
+    cout << "7. Category 5" << endl;
+    cout << "Selection: ";
+    cin >> printSelection;
+  } while (printSelection != "1" && printSelection != "2" &&
+           printSelection != "3" && printSelection != "4" &&
+           printSelection != "5" && printSelection != "6" &&
+           printSelection != "7");
+
+  if (printSelection == "1") {
+    tempPrintNode(unsortedPatientNode);
+  } else if (printSelection == "2") {
+    // note: empty after categorization, unless a sorted search re-loaded it
+    tempPrintNode(patientNode);
+  } else if (printSelection == "3") {
+    tempPrintNode(category1);
+  } else if (printSelection == "4") {
+    tempPrintNode(category2);
+  } else if (printSelection == "5") {
+    tempPrintNode(category3);
+  } else if (printSelection == "6") {
+    tempPrintNode(category4);
+  } else if (printSelection == "7") {
+    tempPrintNode(category5);
+  }
+}
+
+void mainMenu() {
+  string choice = "";
+
+  do {
+    cout << string(80, '=') << endl;
+    cout << "Main Menu" << endl;
+    cout << string(80, '=') << endl;
+    cout << "1. Sort" << endl;
+    cout << "2. Search" << endl;
+    cout << "3. Print List" << endl;
+    cout << "4. Exit" << endl;
+    cout << "Selection: ";
+
+    cin >> choice;
+
+    if (choice == "1") {
+      sortMenu();
+    } else if (choice == "2") {
+      searchMenu();
+    } else if (choice == "3") {
+      printMenu();
+    } else if (choice == "4") {
+      cout << "Goodbye!" << endl;
+    } else {
+      cout << "Invalid selection." << endl;
+    }
+  } while (choice != "4");
+}
+
+int main() {
+  datasetMenu();
+
+  cout << endl;
   cout << string(80, '=') << endl;
+  cout << "Categorizing..." << endl;
+  cout << string(80, '=') << endl;
+
+  sortIntoCategory(patientNode);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 1" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category1);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 2" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category2);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 3" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category3);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 4" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category4);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 5" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category5);
+
+  mainMenu();
 
   return 0;
 }
