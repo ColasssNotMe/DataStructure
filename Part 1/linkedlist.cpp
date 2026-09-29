@@ -28,12 +28,10 @@ public:
 };
 
 const int MAX_PATIENTS = 200;
-PatientNode *patientNode1;
-PatientNode *patientNode2;
-PatientNode *patientNode3;
+PatientNode *patientNode;
+PatientNode *unsortedPatientNode;
 
 // helper function
-
 void insertToEnd(PatientNode *&head, Patient patient) {
   PatientNode *newNode = new PatientNode(patient);
 
@@ -327,7 +325,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
   bool swapped;
 
   do {
-    swapped = false; 
+    swapped = false;
 
     PatientNode *current = head;
 
@@ -366,20 +364,151 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
 }
 
 int main() {
-  readFromDataset(
-      "/home/azuki/Documents/Sem2/DSTR/Part 1/dataset1 facility_a.csv",
-      patientNode1);
+  string selection = "";
 
-  sortIntoCategory(patientNode1);
+  cout << string(80, '=') << endl;
+  cout << "Dataset Selection" << endl;
+  cout << string(80, '=') << endl;
 
+  cout << "Please enter absolute path, or input 1, 2 or 3" << endl;
+  cout << "1. Dataset 1" << endl;
+  cout << "2. Dataset 2" << endl;
+  cout << "3. Dataset 3" << endl;
+  cout << "Selection: ";
+
+  cin >> selection;
+
+  if (selection == "1") {
+    readFromDataset("dataset1_facility_a.csv", patientNode);
+  } else if (selection == "2") {
+    readFromDataset("dataset2_facility_b.csv", patientNode);
+  } else if (selection == "3") {
+    readFromDataset("dataset3_facility_c.csv", patientNode);
+  } else {
+    readFromDataset(selection, patientNode);
+  }
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Categorizing..." << endl;
+  cout << string(80, '=') << endl;
+
+  sortIntoCategory(patientNode);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 1" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category1);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 2" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category2);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 3" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category3);
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Category 4" << endl;
+  cout << string(80, '=') << endl;
   mostPreferredCareType(category4);
 
-  tempPrintNode(category4);
   cout << endl;
-  cout << endl;
-  cout << endl;
-  cout << "Sort bubble" << endl;
-  sortByBubble(category4, "age");
+  cout << string(80, '=') << endl;
+  cout << "Category 5" << endl;
+  cout << string(80, '=') << endl;
+  mostPreferredCareType(category5);
 
-  tempPrintNode(category4);
+  string sortSelection = "";
+  string categorySelection = "";
+  string fieldSelection = "";
+  PatientNode *category = nullptr;
+  string field = "";
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Sorting Menu" << endl;
+  cout << string(80, '=') << endl;
+
+  do {
+    cout << "Select sorting algorithm" << endl;
+    cout << "1. Bubble Sort" << endl;
+    cout << "2. -" << endl;
+    cout << "Selection: ";
+
+    cin >> sortSelection;
+  } while (sortSelection != "1");
+
+  cout << endl;
+
+  do {
+    cout << "Select category to be sorted" << endl;
+    cout << "1. Category 1" << endl;
+    cout << "2. Category 2" << endl;
+    cout << "3. Category 3" << endl;
+    cout << "4. Category 4" << endl;
+    cout << "5. Category 5" << endl;
+    cout << "6. All Category" << endl;
+
+    cout << "Selection: ";
+
+    cin >> categorySelection;
+  } while (categorySelection != "1" && categorySelection != "2" &&
+           categorySelection != "3" && categorySelection != "4" &&
+           categorySelection != "5" && categorySelection != "6");
+
+  if (categorySelection == "1") {
+    category = category1;
+  } else if (categorySelection == "2") {
+    category = category2;
+  } else if (categorySelection == "3") {
+    category = category3;
+  } else if (categorySelection == "4") {
+    category = category4;
+  } else if (categorySelection == "5") {
+    category = category5;
+  } else if (categorySelection == "6") {
+    category = patientNode;
+  }
+
+  cout << endl;
+
+  do {
+    cout << "Select field to be sorted" << endl;
+    cout << "1. Age" << endl;
+    cout << "2. Visit Duration (Length of Stay)" << endl;
+    cout << "3. Total Medical Cost" << endl;
+    cout << "Selection: ";
+
+    cin >> fieldSelection;
+  } while (fieldSelection != "1" && fieldSelection != "2" &&
+           fieldSelection != "3");
+
+  if (fieldSelection == "1") {
+    field = "age";
+  } else if (fieldSelection == "2") {
+    field = "lengthOfStay";
+  } else if (fieldSelection == "3") {
+    field = "totalMedicalCost";
+  }
+
+  cout << endl;
+  cout << string(80, '=') << endl;
+  cout << "Sorting Result" << endl;
+  cout << string(80, '=') << endl;
+
+  if (sortSelection == "1") {
+    sortByBubble(category, field);
+    tempPrintNode(category);
+  }
+
+  cout << string(80, '=') << endl;
+
+  return 0;
 }

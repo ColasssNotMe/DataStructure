@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <utility>
 
 using namespace std;
 
@@ -20,6 +19,7 @@ public:
 const int MAX_PATIENTS = 200;
 
 Patient patientList[MAX_PATIENTS];
+Patient unsortedPatientList[MAX_PATIENTS];
 
 // helper function
 double totalMedicalCost(Patient patient) {
@@ -238,11 +238,12 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
 }
 
 void sortByBubble(Patient patientList[], string fieldToBeCompare,
+
                   int patientCount) {
   for (int i = 0; i < patientCount - 1; i++) {
     bool swapped = false;
 
-    for (int j = 0; j < patientCount - 2 - i; j++) {
+    for (int j = 0; j < patientCount - 1 - i; j++) {
       if (fieldToBeCompare == "age") {
         if (patientList[j].age > patientList[j + 1].age) {
           swap(patientList[j], patientList[j + 1]);
@@ -272,6 +273,42 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   }
 }
 
+Patient searchResult[200];
+void searchUsingLinear(Patient patientList[], int category = 1,
+                       int visitDuration = 0, float totalMedicalCost = 0.0) {
+  int counter = 0;
+  int minAge = 0;
+  int maxAge = 100;
+
+  if (category == 1) {
+    minAge = 0;
+    maxAge = 17;
+  } else if (category == 2) {
+    minAge = 18;
+    maxAge = 25;
+  } else if (category == 3) {
+    minAge = 26;
+    maxAge = 45;
+  } else if (category == 4) {
+    minAge = 46;
+    maxAge = 60;
+  }
+
+  for (int i = 0; i < MAX_PATIENTS; i++) {
+    // TODO: maybe change this to earlier part where the totalmedicalcost is
+    // calculated and store it instead of recalculating
+    int calculateMedicalCost = patientList[i].lengthOfStay *
+                               patientList[i].baseCostPerHour *
+                               patientList[i].daysVisitsPerYear;
+    if (patientList[i].age >= minAge && patientList[i].age <= maxAge &&
+        patientList[i].lengthOfStay > visitDuration &&
+        calculateMedicalCost < totalMedicalCost) {
+      searchResult[counter] = patientList[i];
+      counter++;
+    }
+  }
+}
+
 int main() {
 
   string selection = "";
@@ -286,11 +323,11 @@ int main() {
   cin >> selection;
 
   if (selection == "1") {
-    readFromDataset("dataset1 facility_a.csv", patientList);
+    readFromDataset("dataset1_facility_a.csv", patientList);
   } else if (selection == "2") {
-    readFromDataset("dataset2 facility_a.csv", patientList);
+    readFromDataset("dataset2_facility_b.csv", patientList);
   } else if (selection == "3") {
-    readFromDataset("dataset3 facility_a.csv", patientList);
+    readFromDataset("dataset3_facility_c.csv", patientList);
   } else {
     readFromDataset(selection, patientList);
   }
@@ -355,11 +392,11 @@ int main() {
     cout << "3. Category 3" << endl;
     cout << "4. Category 4" << endl;
     cout << "5. Category 5" << endl;
+    cout << "6. All Category" << endl;
     cin >> categorySelection;
-  } while (categorySelection == "" &&
-           (categorySelection != "1" || categorySelection != "2" ||
-            categorySelection != "3" || categorySelection != "4" ||
-            categorySelection != "5"));
+  } while (categorySelection != "1" && categorySelection != "2" &&
+           categorySelection != "3" && categorySelection != "4" &&
+           categorySelection != "5" && categorySelection != "6");
 
   cout << string(80, '-') << endl;
   if (categorySelection == "1") {
@@ -386,9 +423,8 @@ int main() {
     cout << "2. Visit Duration (Length of Stay)" << endl;
     cout << "3. Total Medical Cost" << endl;
     cin >> fieldSelection;
-  } while (fieldSelection == "" &&
-           (fieldSelection != "1" || fieldSelection != "2" ||
-            fieldSelection != "3"));
+  } while (fieldSelection != "1" && fieldSelection != "2" &&
+           fieldSelection != "3");
 
   if (fieldSelection == "1") {
     field = "age";
