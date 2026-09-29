@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -361,6 +362,64 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
     }
 
   } while (swapped);
+}
+
+PatientNode *searchResult = nullptr;
+// TODO: check implementation
+void searchUsingLinear(PatientNode *&head, int category = 1,
+                       int visitDuration = 0, float totalMedicalCost = 0.0) {
+
+  PatientNode *current = nullptr;
+
+  if (head == nullptr) {
+    cerr << "The Patient is empty [searchUsingLinear]";
+    return;
+  }
+  int counter = 0;
+  int minAge = 0;
+  int maxAge = 100;
+
+  if (category == 1) {
+    minAge = 0;
+    maxAge = 17;
+  } else if (category == 2) {
+    minAge = 18;
+    maxAge = 25;
+  } else if (category == 3) {
+    minAge = 26;
+    maxAge = 45;
+  } else if (category == 4) {
+    minAge = 46;
+    maxAge = 60;
+  }
+
+  if (current == nullptr) {
+    current = head;
+  }
+
+  while (current != nullptr) {
+    // TODO: maybe change this to earlier part where the totalmedicalcost is
+    // calculated and store it instead of recalculating
+    int calculateMedicalCost = current->patient.lengthOfStay *
+                               current->patient.baseCostPerHour *
+                               current->patient.daysVisitsPerYear;
+    if (current->patient.age >= minAge && current->patient.age <= maxAge &&
+        current->patient.lengthOfStay > visitDuration &&
+        calculateMedicalCost < totalMedicalCost) {
+      PatientNode *newNode = new PatientNode(current->patient);
+
+      if (searchResult == nullptr) {
+        searchResult = newNode;
+      } else {
+        PatientNode *temp = searchResult;
+
+        while (temp->nextPatient != nullptr) {
+          temp = temp->nextPatient;
+        }
+        searchResult->nextPatient = newNode;
+      }
+    }
+  }
 }
 
 int main() {

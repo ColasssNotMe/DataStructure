@@ -15,7 +15,7 @@ done until 6(b)
 
 - done implement bubble sort
 
-- havent implement searching method
+- linear searching method implement (check) (not in main)
 
 
 done until 6(b)

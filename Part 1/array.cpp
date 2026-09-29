@@ -274,6 +274,7 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
 }
 
 Patient searchResult[200];
+// TODO:check implementation
 void searchUsingLinear(Patient patientList[], int category = 1,
                        int visitDuration = 0, float totalMedicalCost = 0.0) {
   int counter = 0;
