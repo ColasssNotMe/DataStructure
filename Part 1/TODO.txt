@@ -1,21 +1,15 @@
 **array**:
 5(c) dk what to do :
 - done implement bubble sort, maybe can implement more
-- havent implement time complexity and memory usage, display result
+- havent implement  memory usage, display result
 - the caretype print out is not sorted according to most to least
-- the searching method (linear) not yet used in main ()
 
 
-done until 6(b)
 
 
 
 **linked list**:
+- done implement bubble sort, maybe can implement more
 - the caretype print out is not sorted according to most to least
 
-- done implement bubble sort
-
-- linear searching method implement (check) (not in main)
-
-
-done until 6(b)
+- linear searching method only search for age group
