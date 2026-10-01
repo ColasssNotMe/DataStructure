@@ -18,10 +18,11 @@ public:
 };
 
 const int MAX_PATIENTS = 200;
+const int MAX_PATIENT_ALL_DATASET = 600;
 
-Patient patientList[MAX_PATIENTS];
-Patient unsortedPatientList[MAX_PATIENTS];
-Patient sortedPatientList[MAX_PATIENTS];
+Patient patientList[MAX_PATIENT_ALL_DATASET];
+Patient unsortedPatientList[MAX_PATIENT_ALL_DATASET];
+Patient sortedPatientList[MAX_PATIENT_ALL_DATASET];
 
 int patientCount = 0;
 
@@ -70,17 +71,17 @@ int readFromDataset(string fileName, Patient patientListToBeAppend[]) {
   return lineCount;
 }
 
-void tempPrintArr(Patient arr[], int count = MAX_PATIENTS) {
-  cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
-       << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
-       << setw(15) << "Visits/Year" << endl;
+void tempPrintArr(Patient arr[], int count) {
+  cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+       << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+       << setw(20) << "Visits/Year" << endl;
 
   cout << string(80, '-') << endl;
 
   for (int i = 0; i < count; i++) {
     cout << left << setw(12) << arr[i].PatientID << setw(8) << arr[i].age
-         << setw(15) << arr[i].careType << setw(15) << arr[i].lengthOfStay
-         << setw(15) << arr[i].baseCostPerHour << setw(15)
+         << setw(20) << arr[i].careType << setw(20) << arr[i].lengthOfStay
+         << setw(20) << arr[i].baseCostPerHour << setw(20)
          << arr[i].daysVisitsPerYear << endl;
   }
 }
@@ -205,44 +206,44 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
   }
 
   // Print the result
-  cout << left << setw(15) << "Care Type" << setw(15) << "Patient Count"
-       << setw(15) << "Total Cost ($)" << setw(15)
+  cout << left << setw(20) << "Care Type" << setw(20) << "Patient Count"
+       << setw(20) << "Total Cost ($)" << setw(20)
        << "Average Cost per Patient ($)" << endl;
 
   cout << string(80, '-') << endl;
 
   int totalBillingForAgeGroup = 0;
   if (vaccineCounter != 0) {
-    cout << left << setw(15) << "Vaccination" << setw(15) << vaccineCounter
-         << setw(15) << totalMedicalCostVaccine << setw(15) << vacAvg << endl;
+    cout << left << setw(20) << "Vaccination" << setw(20) << vaccineCounter
+         << setw(20) << totalMedicalCostVaccine << setw(20) << vacAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostVaccine;
   }
   if (rehabCounter != 0) {
-    cout << left << setw(15) << "Rehabilitation" << setw(15) << rehabCounter
-         << setw(15) << totalMedicalCostRehab << setw(15) << rehabAvg << endl;
+    cout << left << setw(20) << "Rehabilitation" << setw(20) << rehabCounter
+         << setw(20) << totalMedicalCostRehab << setw(20) << rehabAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostRehab;
   }
   if (routineCounter != 0) {
-    cout << left << setw(15) << "Routine Checkup" << setw(15) << routineCounter
-         << setw(15) << totalMedicalCostRoutine << setw(15) << routineAvg
+    cout << left << setw(20) << "Routine Checkup" << setw(20) << routineCounter
+         << setw(20) << totalMedicalCostRoutine << setw(20) << routineAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostRoutine;
   }
   if (emergencyCounter != 0) {
-    cout << left << setw(15) << "Emergency" << setw(15) << emergencyCounter
-         << setw(15) << totalMedicalCostEmergency << setw(15) << emergencyAvg
+    cout << left << setw(20) << "Emergency" << setw(20) << emergencyCounter
+         << setw(20) << totalMedicalCostEmergency << setw(20) << emergencyAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostEmergency;
   }
   if (outpatientCounter != 0) {
-    cout << left << setw(15) << "Outpatient" << setw(15) << outpatientCounter
-         << setw(15) << totalMedicalCostOutpatient << setw(15) << outAvg
+    cout << left << setw(20) << "Outpatient" << setw(20) << outpatientCounter
+         << setw(20) << totalMedicalCostOutpatient << setw(20) << outAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostOutpatient;
   }
   if (inpatientCounter != 0) {
-    cout << left << setw(15) << "Inpatient" << setw(15) << inpatientCounter
-         << setw(15) << totalMedicalCostInpatient << setw(15) << inAvg << endl;
+    cout << left << setw(20) << "Inpatient" << setw(20) << inpatientCounter
+         << setw(20) << totalMedicalCostInpatient << setw(20) << inAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostInpatient;
   }
   cout << string(80, '-') << endl;
@@ -341,16 +342,16 @@ void searchUsingLinear(Patient patientList[], int category = 1,
   cout << "Found " << counter << " matching patient(s)" << endl << endl;
 
   if (counter > 0) {
-    cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
-         << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
-         << setw(15) << "Visits/Year" << endl;
+    cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+         << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+         << setw(20) << "Visits/Year" << endl;
     cout << string(80, '-') << endl;
 
     for (int i = 0; i < counter; i++) {
       cout << left << setw(12) << searchResult[i].PatientID << setw(8)
-           << searchResult[i].age << setw(15) << searchResult[i].careType
-           << setw(15) << searchResult[i].lengthOfStay << setw(15)
-           << searchResult[i].baseCostPerHour << setw(15)
+           << searchResult[i].age << setw(20) << searchResult[i].careType
+           << setw(20) << searchResult[i].lengthOfStay << setw(20)
+           << searchResult[i].baseCostPerHour << setw(20)
            << searchResult[i].daysVisitsPerYear << endl;
     }
   }

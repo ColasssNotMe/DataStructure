@@ -30,6 +30,7 @@ public:
 };
 
 const int MAX_PATIENTS = 200;
+const int MAX_PATIENTS_ALL_DATASET = 600;
 
 PatientNode *patientNode = nullptr;
 PatientNode *unsortedPatientNode = nullptr;
@@ -90,9 +91,6 @@ void insertToEnd(PatientNode *&head, PatientNode *&patient) {
   current->nextPatient = patient;
 }
 
-// FIX: added — deletes every node in a list and resets the head to nullptr.
-// Needed so searchResult can be cleared between searches and patientNode
-// can be safely re-loaded for the "sorted data" search.
 void freeList(PatientNode *&head) {
   while (head != nullptr) {
     PatientNode *next = head->nextPatient;
@@ -153,9 +151,9 @@ double totalMedicalCost(PatientNode *&patient) {
 
 void tempPrintNode(PatientNode *patientNode) {
 
-  cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(15)
-       << "Care Type" << setw(15) << "Stay" << setw(15) << "Cost/Hour"
-       << setw(15) << "Visits/Year" << endl;
+  cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+       << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+       << setw(20) << "Visits/Year" << endl;
 
   cout << string(80, '-') << endl;
 
@@ -163,9 +161,9 @@ void tempPrintNode(PatientNode *patientNode) {
 
   while (current != nullptr) {
     cout << left << setw(12) << current->patient.PatientID << setw(8)
-         << current->patient.age << setw(15) << current->patient.careType
-         << setw(15) << current->patient.lengthOfStay << setw(15)
-         << current->patient.baseCostPerHour << setw(15)
+         << current->patient.age << setw(20) << current->patient.careType
+         << setw(20) << current->patient.lengthOfStay << setw(20)
+         << current->patient.baseCostPerHour << setw(20)
          << current->patient.daysVisitsPerYear << endl;
 
     current = current->nextPatient;
@@ -285,44 +283,44 @@ void mostPreferredCareType(PatientNode *&head) {
   }
 
   // Print the result
-  cout << left << setw(15) << "Care Type" << setw(15) << "Patient Count"
-       << setw(15) << "Total Cost ($)" << setw(15)
+  cout << left << setw(20) << "Care Type" << setw(20) << "Patient Count"
+       << setw(20) << "Total Cost ($)" << setw(20)
        << "Average Cost per Patient ($)" << endl;
 
   cout << string(80, '-') << endl;
 
   int totalBillingForAgeGroup = 0;
   if (vaccineCounter != 0) {
-    cout << left << setw(15) << "Vaccination" << setw(15) << vaccineCounter
-         << setw(15) << totalMedicalCostVaccine << setw(15) << vacAvg << endl;
+    cout << left << setw(20) << "Vaccination" << setw(20) << vaccineCounter
+         << setw(20) << totalMedicalCostVaccine << setw(20) << vacAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostVaccine;
   }
   if (rehabCounter != 0) {
-    cout << left << setw(15) << "Rehabilitation" << setw(15) << rehabCounter
-         << setw(15) << totalMedicalCostRehab << setw(15) << rehabAvg << endl;
+    cout << left << setw(20) << "Rehabilitation" << setw(20) << rehabCounter
+         << setw(20) << totalMedicalCostRehab << setw(20) << rehabAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostRehab;
   }
   if (routineCounter != 0) {
-    cout << left << setw(15) << "Routine Checkup" << setw(15) << routineCounter
-         << setw(15) << totalMedicalCostRoutine << setw(15) << routineAvg
+    cout << left << setw(20) << "Routine Checkup" << setw(20) << routineCounter
+         << setw(20) << totalMedicalCostRoutine << setw(20) << routineAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostRoutine;
   }
   if (emergencyCounter != 0) {
-    cout << left << setw(15) << "Emergency" << setw(15) << emergencyCounter
-         << setw(15) << totalMedicalCostEmergency << setw(15) << emergencyAvg
+    cout << left << setw(20) << "Emergency" << setw(20) << emergencyCounter
+         << setw(20) << totalMedicalCostEmergency << setw(20) << emergencyAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostEmergency;
   }
   if (outpatientCounter != 0) {
-    cout << left << setw(15) << "Outpatient" << setw(15) << outpatientCounter
-         << setw(15) << totalMedicalCostOutpatient << setw(15) << outAvg
+    cout << left << setw(20) << "Outpatient" << setw(20) << outpatientCounter
+         << setw(20) << totalMedicalCostOutpatient << setw(20) << outAvg
          << endl;
     totalBillingForAgeGroup += totalMedicalCostOutpatient;
   }
   if (inpatientCounter != 0) {
-    cout << left << setw(15) << "Inpatient" << setw(15) << inpatientCounter
-         << setw(15) << totalMedicalCostInpatient << setw(15) << inAvg << endl;
+    cout << left << setw(20) << "Inpatient" << setw(20) << inpatientCounter
+         << setw(20) << totalMedicalCostInpatient << setw(20) << inAvg << endl;
     totalBillingForAgeGroup += totalMedicalCostInpatient;
   }
   cout << string(80, '-') << endl;
@@ -338,7 +336,6 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
   }
 
   auto start = chrono::high_resolution_clock::now();
-
   bool swapped;
 
   do {
@@ -466,6 +463,7 @@ void datasetMenu() {
   cout << "1. Dataset 1" << endl;
   cout << "2. Dataset 2" << endl;
   cout << "3. Dataset 3" << endl;
+  cout << "4. All Dataset" << endl;
   cout << "Selection: ";
 
   cin >> selection;
@@ -476,6 +474,14 @@ void datasetMenu() {
     datasetFileName = "dataset2_facility_b.csv";
   } else if (selection == "3") {
     datasetFileName = "dataset3_facility_c.csv";
+  } else if (selection == "4") {
+    readFromDataset("dataset1_facility_a.csv", patientNode);
+    readFromDataset("dataset2_facility_b.csv", patientNode);
+    readFromDataset("dataset3_facility_c.csv", patientNode);
+    readFromDataset("dataset1_facility_a.csv", unsortedPatientNode);
+    readFromDataset("dataset2_facility_b.csv", unsortedPatientNode);
+    readFromDataset("dataset3_facility_c.csv", unsortedPatientNode);
+    return;
   } else {
     datasetFileName = selection;
   }
@@ -646,7 +652,6 @@ void printMenu() {
   if (printSelection == "1") {
     tempPrintNode(unsortedPatientNode);
   } else if (printSelection == "2") {
-    // note: empty after categorization, unless a sorted search re-loaded it
     tempPrintNode(patientNode);
   } else if (printSelection == "3") {
     tempPrintNode(category1);
