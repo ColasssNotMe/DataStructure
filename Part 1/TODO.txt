@@ -13,3 +13,8 @@
 - the caretype print out is not sorted according to most to least
 
 - linear searching method only search for age group
+
+
+
+**build**
+g++ main.cpp implementations.cpp -o patient_dstr

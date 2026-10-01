@@ -34,7 +34,7 @@ It therefore does not call the original `readFromDataset()` twice.
 ## Compile
 
 ```bash
-g++ -std=c++17 -O0 -Wall -Wextra -pedantic main.cpp implementations.cpp -o patient_dstr
+g++ main.cpp implementations.cpp -o patient_dstr
 ```
 
 Run:

@@ -86,14 +86,11 @@ void showComparisonMenu() {
     cout << "1. Load dataset (read CSV once)" << endl;
     cout << "2. Print array" << endl;
     cout << "3. Print linked list" << endl;
-    cout << "4. Sort array" << endl;
-    cout << "5. Sort linked list" << endl;
-    cout << "6. Categorize array" << endl;
-    cout << "7. Categorize linked list" << endl;
+    cout << "4. Sort" << endl;
     cout << "8. Array care-type summary" << endl;
     cout << "9. Linked-list care-type summary" << endl;
-    cout << "10. Array linear search" << endl;
-    cout << "11. Linked-list linear search" << endl;
+    cout << "10. Linear search" << endl;
+    cout << "11. Binary search" << endl;
     cout << "0. Exit" << endl;
     cout << "Selection: ";
     cin >> choice;
@@ -104,10 +101,30 @@ void showComparisonMenu() {
 
       Array::patientCount = 0;
 
-      loadDatasetOnce("dataset1_facility_a.csv");
-      loadDatasetOnce("dataset2_facility_b.csv");
-      loadDatasetOnce("dataset3_facility_c.csv");
-      cout << "Patients Loaded" << endl;
+      string datasetChoosen;
+      cout << "Choose a dataset to load: " << endl;
+      cout << "1. Dataset 1 " << endl;
+      cout << "2. Dataset 2" << endl;
+      cout << "3. Dataset 3" << endl;
+      cout << "4. All dataset" << endl;
+      cin >> datasetChoosen;
+      if (datasetChoosen == "1") {
+        loadDatasetOnce("dataset1_facility_a.csv");
+
+        cout << "Dataset 1 loaded " << endl;
+      } else if (datasetChoosen == "2") {
+        loadDatasetOnce("dataset2_facility_b.csv");
+        cout << "Dataset 2 loaded " << endl;
+      } else if (datasetChoosen == "3") {
+        loadDatasetOnce("dataset3_facility_c.csv");
+        cout << "Dataset 3 loaded " << endl;
+      } else {
+        loadDatasetOnce("dataset1_facility_a.csv");
+        loadDatasetOnce("dataset2_facility_b.csv");
+        loadDatasetOnce("dataset3_facility_c.csv");
+        cout << "All dataset loaded " << endl;
+      }
+
     } else if (Array::patientCount == 0 && choice != 0) {
       cout << "Please load a dataset first." << endl;
     } else if (choice == 2) {
@@ -118,16 +135,15 @@ void showComparisonMenu() {
       string field;
       cout << "Sort field (age / stay / cost): ";
       cin >> field;
+      cout << string(30, '*') << endl;
+      cout << "Array Bubble Sort" << endl;
+      cout << string(30, '*') << endl;
       Array::sortByBubble(Array::patientList, field, Array::patientCount);
-    } else if (choice == 5) {
-      string field;
-      cout << "Sort field (age / stay / cost): ";
-      cin >> field;
+      cout << string(30, '*') << endl;
+      cout << "Linked List Bubble Sort" << endl;
+      cout << string(30, '*') << endl;
       LinkedList::sortByBubble(LinkedList::patientNode, field);
-    } else if (choice == 6) {
-      Array::sortIntoCategory(Array::patientList);
-    } else if (choice == 7) {
-      LinkedList::sortIntoCategory(LinkedList::patientNode);
+      // TODO: call other sorting function here
     } else if (choice == 8) {
       Array::mostPreferredCareType(Array::category1, Array::category1Count);
       Array::mostPreferredCareType(Array::category2, Array::category2Count);

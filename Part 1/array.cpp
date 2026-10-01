@@ -293,7 +293,7 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   cout << string(80, '*') << endl;
 }
 
-Patient searchResult[200];
+Patient searchResult[600];
 
 void searchUsingLinear(Patient patientList[], int category = 1,
                        int visitDuration = 0, float totalMedicalCost = 0.0) {
@@ -354,6 +354,71 @@ void searchUsingLinear(Patient patientList[], int category = 1,
            << searchResult[i].baseCostPerHour << setw(20)
            << searchResult[i].daysVisitsPerYear << endl;
     }
+  }
+}
+
+void searchUsingBinary(Patient patientList[], string fieldToSearch,
+                       double value) {
+  auto start = chrono::high_resolution_clock::now();
+  int counter = 0;
+  int minAge = 0;
+  int maxAge = 100;
+
+  int low = 0;
+  int high = patientCount;
+
+  Patient tempPatient;
+
+  bool found = false;
+  if (fieldToSearch == "age") {
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+
+      if (patientList[mid].age == value) {
+        tempPatient = patientList[mid];
+        found = true;
+      } else if (patientList[mid].age < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+  } else if (fieldToSearch == "visitDuration") {
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+
+      if (patientList[mid].lengthOfStay == value) {
+        tempPatient = patientList[mid];
+        found = true;
+      } else if (patientList[mid].lengthOfStay < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+  }
+
+  if (found == false) {
+    cout << "No result from the query" << endl;
+  }
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+
+  cout << string(80, '*') << endl;
+  cout << "Searching took " << duration.count() << " microseconds" << endl;
+  cout << string(80, '*') << endl;
+
+  if (counter > 0) {
+    cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+         << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+         << setw(20) << "Visits/Year" << endl;
+    cout << string(80, '-') << endl;
+
+    cout << left << setw(12) << tempPatient.PatientID << setw(8)
+         << tempPatient.age << setw(20) << tempPatient.careType << setw(20)
+         << tempPatient.lengthOfStay << setw(20) << tempPatient.baseCostPerHour
+         << setw(20) << tempPatient.daysVisitsPerYear << endl;
   }
 }
 
@@ -527,57 +592,59 @@ void sortMenu() {
   }
 }
 
-void searchMenu() {
-  if (patientCount == 0) {
-    cout << "No dataset loaded. Please load a dataset first." << endl;
-    return;
-  }
-
-  string searchSelection = "";
-  do {
-    cout << string(80, '=') << endl;
-    cout << "Search" << endl;
-    cout << string(80, '=') << endl;
-    cout << "Select 1 data from below" << endl;
-    cout << "1. Unsorted Data" << endl;
-    cout << "2. Sorted Data" << endl;
-    cin >> searchSelection;
-  } while (searchSelection != "1" && searchSelection != "2");
-
-  string searchCategory = "";
-  do {
-    cout << string(80, '=') << endl;
-    cout << "Search" << endl;
-    cout << string(80, '=') << endl;
-    cout << "Enter age group" << endl;
-    cout << "1. Category 1 (0-17)" << endl;
-    cout << "2. Category 2 (18-25)" << endl;
-    cout << "3. Category 3 (26-45)" << endl;
-    cout << "4. Category 4 (46-60)" << endl;
-    cout << "5. Category 5 (61-100)" << endl;
-    cin >> searchCategory;
-  } while (searchCategory != "1" && searchCategory != "2" &&
-           searchCategory != "3" && searchCategory != "4" &&
-           searchCategory != "5");
-
-  int visitDuration = 0;
-  float maxTotalMedicalCost = 0.0f;
-
-  cout << string(80, '=') << endl;
-  cout << "Find patients with length of stay greater than: ";
-  cin >> visitDuration;
-  cout << "And total medical cost less than ($): ";
-  cin >> maxTotalMedicalCost;
-
-  if (searchSelection == "1") {
-    searchUsingLinear(unsortedPatientList, stoi(searchCategory), visitDuration,
-                      maxTotalMedicalCost);
-  } else {
-    sortByBubble(patientList, "age", patientCount);
-    searchUsingLinear(patientList, stoi(searchCategory), visitDuration,
-                      maxTotalMedicalCost);
-  }
-}
+// #deprecated
+// void searchMenu() {
+//   if (patientCount == 0) {
+//     cout << "No dataset loaded. Please load a dataset first." << endl;
+//     return;
+//   }
+//
+//   string searchSelection = "";
+//   do {
+//     cout << string(80, '=') << endl;
+//     cout << "Search" << endl;
+//     cout << string(80, '=') << endl;
+//     cout << "Select 1 data from below" << endl;
+//     cout << "1. Unsorted Data" << endl;
+//     cout << "2. Sorted Data" << endl;
+//     cin >> searchSelection;
+//   } while (searchSelection != "1" && searchSelection != "2");
+//
+//   string searchCategory = "";
+//   do {
+//     cout << string(80, '=') << endl;
+//     cout << "Search" << endl;
+//     cout << string(80, '=') << endl;
+//     cout << "Enter age group" << endl;
+//     cout << "1. Category 1 (0-17)" << endl;
+//     cout << "2. Category 2 (18-25)" << endl;
+//     cout << "3. Category 3 (26-45)" << endl;
+//     cout << "4. Category 4 (46-60)" << endl;
+//     cout << "5. Category 5 (61-100)" << endl;
+//     cin >> searchCategory;
+//   } while (searchCategory != "1" && searchCategory != "2" &&
+//            searchCategory != "3" && searchCategory != "4" &&
+//            searchCategory != "5");
+//
+//   int visitDuration = 0;
+//   float maxTotalMedicalCost = 0.0f;
+//
+//   cout << string(80, '=') << endl;
+//   cout << "Find patients with length of stay greater than: ";
+//   cin >> visitDuration;
+//   cout << "And total medical cost less than ($): ";
+//   cin >> maxTotalMedicalCost;
+//
+//   if (searchSelection == "1") {
+//     searchUsingLinear(unsortedPatientList, stoi(searchCategory),
+//     visitDuration,
+//                       maxTotalMedicalCost);
+//   } else {
+//     sortByBubble(patientList, "age", patientCount);
+//     searchUsingLinear(patientList, stoi(searchCategory), visitDuration,
+//                       maxTotalMedicalCost);
+//   }
+// }
 
 int main() {
   string menuSelection = "";
@@ -603,7 +670,7 @@ int main() {
     } else if (menuSelection == "3") {
       sortMenu();
     } else if (menuSelection == "4") {
-      searchMenu();
+      // searchMenu();
     } else if (menuSelection == "5") {
       exitProgram = true;
     } else {

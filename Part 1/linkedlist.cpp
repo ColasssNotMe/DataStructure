@@ -98,6 +98,19 @@ void freeList(PatientNode *&head) {
   }
 }
 
+int countNodes(PatientNode *head) {
+  int count = 0;
+
+  PatientNode *current = head;
+
+  while (current != nullptr) {
+    count++;
+    current = current->nextPatient;
+  }
+
+  return count;
+}
+
 void readFromDataset(string fileName, PatientNode *&head) {
   ifstream file(fileName);
   if (!file.is_open()) {
@@ -447,6 +460,94 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
   }
 
   return counter;
+}
+
+void searchUsingBinary(PatientNode *&head, string fieldToSearch, double value) {
+  auto start = chrono::high_resolution_clock::now();
+  int counter = 0;
+
+  int nodeCount = 0;
+  PatientNode *current = head;
+
+  while (current != nullptr) {
+    nodeCount++;
+    current = current->nextPatient;
+  }
+
+  int low = 0;
+  int high = nodeCount - 1;
+
+  Patient tempPatient;
+
+  bool found = false;
+
+  if (fieldToSearch == "age") {
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+
+      current = head;
+
+      for (int i = 0; i < mid; i++) {
+        current = current->nextPatient;
+      }
+
+      if (current->patient.age == value) {
+        tempPatient = current->patient;
+        found = true;
+        counter++;
+        break;
+      } else if (current->patient.age < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+  } else if (fieldToSearch == "visitDuration") {
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+
+      current = head;
+
+      for (int i = 0; i < mid; i++) {
+        current = current->nextPatient;
+      }
+
+      if (current->patient.lengthOfStay == value) {
+        tempPatient = current->patient;
+        found = true;
+        counter++;
+        break;
+      } else if (current->patient.lengthOfStay < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+  }
+
+  if (found == false) {
+    cout << "No result from the query" << endl;
+  }
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+
+  cout << string(80, '*') << endl;
+  cout << "Searching took " << duration.count() << " microseconds" << endl;
+  cout << string(80, '*') << endl;
+
+  if (counter > 0) {
+    cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+         << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+         << setw(20) << "Visits/Year" << endl;
+
+    cout << string(80, '-') << endl;
+
+    cout << left << setw(12) << tempPatient.PatientID << setw(8)
+         << tempPatient.age << setw(20) << tempPatient.careType << setw(20)
+         << tempPatient.lengthOfStay << setw(20) << tempPatient.baseCostPerHour
+         << setw(20) << tempPatient.daysVisitsPerYear << endl;
+  }
 }
 
 // Menus
