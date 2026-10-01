@@ -64,6 +64,7 @@ int loadDatasetOnce(const string &fileName) {
     // Store original/unsorted copy
     Array::unsortedPatientList[Array::patientCount] = arrayPatient;
 
+    // Store original/unsorted copy
     LinkedList::insertToEnd(LinkedList::unsortedPatientNode, linkedPatient);
 
     Array::patientCount++;
@@ -80,7 +81,7 @@ void showComparisonMenu() {
 
   do {
     cout << "\n" << string(80, '=') << endl;
-    cout << "DSTR Array vs Singly Linked List" << endl;
+    cout << "Menu" << endl;
     cout << string(80, '=') << endl;
     cout << "1. Load dataset (read CSV once)" << endl;
     cout << "2. Print array" << endl;
@@ -98,12 +99,15 @@ void showComparisonMenu() {
     cin >> choice;
 
     if (choice == 1) {
-      string fileName;
-      cout << "Dataset file: ";
-      cin >> fileName;
+      LinkedList::freeList(LinkedList::patientNode);
+      LinkedList::freeList(LinkedList::unsortedPatientNode);
 
-      int count = loadDatasetOnce(fileName);
-      cout << "Loaded " << count << " patients." << endl;
+      Array::patientCount = 0;
+
+      loadDatasetOnce("dataset1_facility_a.csv");
+      loadDatasetOnce("dataset2_facility_b.csv");
+      loadDatasetOnce("dataset3_facility_c.csv");
+      cout << "Patients Loaded" << endl;
     } else if (Array::patientCount == 0 && choice != 0) {
       cout << "Please load a dataset first." << endl;
     } else if (choice == 2) {
@@ -173,10 +177,6 @@ int main() {
   // Load dataset
   LinkedList::freeList(LinkedList::patientNode);
   LinkedList::freeList(LinkedList::unsortedPatientNode);
-  loadDatasetOnce("dataset1_facility_a.csv");
-  loadDatasetOnce("dataset2_facility_b.csv");
-  loadDatasetOnce("dataset3_facility_c.csv");
-  
 
   showComparisonMenu();
   LinkedList::freeList(LinkedList::patientNode);
