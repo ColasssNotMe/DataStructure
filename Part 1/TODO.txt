@@ -4,17 +4,37 @@
 - havent implement  memory usage, display result
 - the caretype print out is not sorted according to most to least
 
-
-
-
+-------------------------------------------------------------------------
 
 **linked list**:
 - done implement bubble sort, maybe can implement more
 - the caretype print out is not sorted according to most to least
 
 - linear searching method only search for age group
+-----------------------------------------------------------------------------
+havent done part:
+5.
+a. Calculate total medical billing costs per dataset. (function is there but not calculating based on dataset)
+c. Compare expenditure and visit durations across datasets and age groups. (no comparison shown yet)
+
+
+6.
+c. Compare time complexity and memory usage between arrays and singly linked lists. (memory havent implement yet)
+d. Display sorting performance results as text-based tables in the console. (no table show the performance result)
+
+
+7.
+c.Compare execution time, steps/comparisons, and memory overhead between arrays
+and singly linked lists.
+
+9. Clinical Insights and Recommendations
+a. Compare treatment costs and service preferences across datasets and age
+groups using text table.
+b. Identify which demographic groups generate the highest healthcare billing
+and which care types experience the highest patient traffic.
 
 
 
+--------------------------------------------------------------------------------
 **build**
 g++ main.cpp implementations.cpp -o patient_dstr
