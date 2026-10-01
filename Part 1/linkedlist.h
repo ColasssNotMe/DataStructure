@@ -9,23 +9,23 @@ using namespace std;
 
 class Patient {
 public:
-    string PatientID;
-    int age;
-    std::string careType;
-    int lengthOfStay;
-    int baseCostPerHour;
-    int daysVisitsPerYear;
+  string PatientID;
+  int age;
+  std::string careType;
+  int lengthOfStay;
+  int baseCostPerHour;
+  int daysVisitsPerYear;
 };
 
 class PatientNode {
 public:
-    PatientNode(Patient patientParam) {
-        patient = patientParam;
-        nextPatient = nullptr;
-    }
+  PatientNode(Patient patientParam) {
+    patient = patientParam;
+    nextPatient = nullptr;
+  }
 
-    Patient patient;
-    PatientNode *nextPatient;
+  Patient patient;
+  PatientNode *nextPatient;
 };
 
 extern PatientNode *patientNode;
@@ -49,8 +49,8 @@ void sortIntoCategory(PatientNode *&head);
 void mostPreferredCareType(PatientNode *&head);
 void sortByBubble(PatientNode *&head, string fieldToBeCompare);
 int searchUsingLinear(PatientNode *&head, int category = 1,
-                      int visitDuration = 0,
-                      float totalMedicalCost = 0.0);
+                      int visitDuration = 0, float totalMedicalCost = 0.0);
+void searchUsingBinary(PatientNode *&head, string fieldToSearch, double value);
 
 void datasetMenu();
 void sortMenu();

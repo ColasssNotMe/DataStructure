@@ -9,12 +9,12 @@ using namespace std;
 
 class Patient {
 public:
-    string PatientID;
-    int age;
-    std::string careType;
-    int lengthOfStay;
-    int baseCostPerHour;
-    int daysVisitsPerYear;
+  string PatientID;
+  int age;
+  std::string careType;
+  int lengthOfStay;
+  int baseCostPerHour;
+  int daysVisitsPerYear;
 };
 
 extern Patient patientList[];
@@ -50,9 +50,10 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
                   int patientCount);
 
 void searchUsingLinear(Patient patientList[], int category = 1,
-                       int visitDuration = 0,
-                       float totalMedicalCost = 0.0);
+                       int visitDuration = 0, float totalMedicalCost = 0.0);
 
+void searchUsingBinary(Patient patientList[], string fieldToSearch,
+                       double value);
 void loadDatasetMenu();
 void categorySummaryMenu();
 void sortMenu();
