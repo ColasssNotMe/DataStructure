@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// Reads the CSV once and stores every record in both implementations.
 int loadDatasetOnce(const string &fileName) {
   ifstream file(fileName);
   if (!file.is_open()) {
@@ -16,17 +15,12 @@ int loadDatasetOnce(const string &fileName) {
     return 0;
   }
 
-  // Clear previous data if main is used to load another dataset.
-  Array::patientCount = 0;
-  LinkedList::freeList(LinkedList::patientNode);
-  LinkedList::freeList(LinkedList::unsortedPatientNode);
-
   string line;
   getline(file, line); // header
 
   int count = 0;
 
-  while (getline(file, line) && count < 200) {
+  while (getline(file, line) && Array::patientCount < 600) {
     if (line.empty()) {
       continue;
     }
@@ -34,8 +28,6 @@ int loadDatasetOnce(const string &fileName) {
     stringstream ss(line);
     string token;
 
-    // Create one array Patient and one linked-list Patient from the
-    // same parsed CSV row. The file itself is still read only once.
     Array::Patient arrayPatient;
     LinkedList::Patient linkedPatient;
 
@@ -63,19 +55,22 @@ int loadDatasetOnce(const string &fileName) {
     arrayPatient.daysVisitsPerYear = stoi(token);
     linkedPatient.daysVisitsPerYear = arrayPatient.daysVisitsPerYear;
 
-    // Main/current copy.
-    Array::patientList[count] = arrayPatient;
+    // Store in array
+    Array::patientList[Array::patientCount] = arrayPatient;
+
+    // Store in linked list
     LinkedList::insertToEnd(LinkedList::patientNode, linkedPatient);
 
-    // Unsorted/original copy.
-    Array::unsortedPatientList[count] = arrayPatient;
+    // Store original/unsorted copy
+    Array::unsortedPatientList[Array::patientCount] = arrayPatient;
+
     LinkedList::insertToEnd(LinkedList::unsortedPatientNode, linkedPatient);
 
-    ++count;
+    Array::patientCount++;
+    count++;
   }
 
   file.close();
-  Array::patientCount = count;
 
   return count;
 }
@@ -175,6 +170,14 @@ void showComparisonMenu() {
 }
 
 int main() {
+  // Load dataset
+  LinkedList::freeList(LinkedList::patientNode);
+  LinkedList::freeList(LinkedList::unsortedPatientNode);
+  loadDatasetOnce("dataset1_facility_a.csv");
+  loadDatasetOnce("dataset2_facility_b.csv");
+  loadDatasetOnce("dataset3_facility_c.csv");
+  
+
   showComparisonMenu();
   LinkedList::freeList(LinkedList::patientNode);
   LinkedList::freeList(LinkedList::unsortedPatientNode);

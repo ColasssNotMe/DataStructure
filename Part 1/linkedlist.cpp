@@ -36,7 +36,6 @@ PatientNode *patientNode = nullptr;
 PatientNode *unsortedPatientNode = nullptr;
 PatientNode *searchResult = nullptr;
 
-// remembered so the Search menu can re-load the file for "sorted data"
 string datasetFileName = "";
 
 //  0–17: Pediatrics & Adolescents
