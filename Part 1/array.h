@@ -57,6 +57,9 @@ void searchUsingLinear(Patient patientList[], int category = 1,
 
 void searchUsingBinary(Patient patientList[], string fieldToSearch,
                        double value);
+
+void identifyHighestBillingAndTraffic(Patient patientList[], int patientCount);
+
 void loadDatasetMenu();
 void categorySummaryMenu();
 void sortMenu();

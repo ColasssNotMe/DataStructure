@@ -360,6 +360,68 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
 
 Patient searchResult[600];
 
+void identifyHighestBillingAndTraffic(Patient patientList[], int patientCount) {
+  int minAge[5] = {0, 18, 26, 46, 61};
+  int maxAge[5] = {17, 25, 45, 60, 100};
+
+  string ageGroup[5] = {"0-17", "18-25", "26-45", "46-60", "61-100"};
+
+  double totalBilling[5] = {0, 0, 0, 0, 0};
+  int careTypeCount[5] = {0, 0, 0, 0, 0};
+
+  string careTypes[5] = {"Emergency", "Inpatient", "Outpatient",
+                         "Rehabilitation", "Vaccination"};
+
+  for (int i = 0; i < patientCount; i++) {
+
+    for (int group = 0; group < 5; group++) {
+      if (patientList[i].age >= minAge[group] &&
+          patientList[i].age <= maxAge[group]) {
+
+        totalBilling[group] += totalMedicalCost(patientList[i]);
+        break;
+      }
+    }
+
+    for (int type = 0; type < 5; type++) {
+      if (patientList[i].careType == careTypes[type]) {
+        careTypeCount[type]++;
+        break;
+      }
+    }
+  }
+
+  int highestBillingGroup = 0;
+
+  for (int i = 1; i < 5; i++) {
+    if (totalBilling[i] > totalBilling[highestBillingGroup]) {
+      highestBillingGroup = i;
+    }
+  }
+
+  int highestTrafficType = 0;
+
+  for (int i = 1; i < 5; i++) {
+    if (careTypeCount[i] > careTypeCount[highestTrafficType]) {
+      highestTrafficType = i;
+    }
+  }
+
+  cout << string(60, '=') << endl;
+  cout << "Highest Healthcare Billing and Patient Traffic" << endl;
+  cout << string(60, '=') << endl;
+
+  cout << "Highest Healthcare Billing" << endl;
+  cout << "Demographic Group : " << ageGroup[highestBillingGroup] << endl;
+  cout << "Total Billing     : " << totalBilling[highestBillingGroup] << endl;
+
+  cout << "Highest Patient Traffic" << endl;
+  cout << "Care Type         : " << careTypes[highestTrafficType] << endl;
+  cout << "Patient Count     : " << careTypeCount[highestTrafficType] << endl;
+
+  cout << string(60, '=') << endl;
+}
+
 void searchUsingLinear(Patient patientList[], int category = 1,
                        int visitDuration = 0, float totalMedicalCost = 0.0) {
   auto start = chrono::high_resolution_clock::now();

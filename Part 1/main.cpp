@@ -99,6 +99,7 @@ void showComparisonMenu() {
     cout << "9. Linked-list care-type summary" << endl;
     cout << "10. Linear search" << endl;
     cout << "11. Binary search" << endl;
+    cout << "12. Identify highest billing and patient traffic" << endl;
     cout << "0. Exit" << endl;
     cout << "Selection: ";
     cin >> choice;
@@ -242,6 +243,9 @@ void showComparisonMenu() {
                                     value);
 
       cout << endl << endl;
+    } else if (choice == 12) {
+      Array::identifyHighestBillingAndTraffic(Array::patientList,
+                                              Array::patientCount);
     }
   } while (choice != 0);
 }
