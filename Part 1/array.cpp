@@ -92,11 +92,11 @@ void tempPrintArr(Patient arr[], int count) {
 //  26–45: Working Adults (Early Career)
 //  46–60: Working Adults (Late Career)
 //  61–100: Senior Citizens / Geriatric Care
-Patient category1[200];
-Patient category2[200];
-Patient category3[200];
-Patient category4[200];
-Patient category5[200];
+Patient category1[600];
+Patient category2[600];
+Patient category3[600];
+Patient category4[600];
+Patient category5[600];
 
 int category1Count = 0;
 int category2Count = 0;
@@ -129,6 +129,69 @@ void sortIntoCategory(Patient toBeSortList[]) {
       category5Count++;
     }
   }
+}
+
+void compareExpenditureAndVisitDuration(Patient patientList[], int patientCount,
+                                        string datasetName) {
+
+  int minAge[5] = {0, 18, 26, 46, 61};
+  int maxAge[5] = {17, 25, 45, 60, 100};
+
+  string ageGroup[5] = {"0-17", "18-25", "26-45", "46-60", "61-100"};
+
+  cout << "\n" << string(140, '=') << endl;
+  cout << datasetName << endl;
+  cout << string(140, '=') << endl;
+
+  cout << left << setw(12) << "Age Group" << setw(12) << "Patients" << setw(20)
+       << "Total Expenditure" << setw(20) << "Avg Expenditure" << setw(20)
+       << "Total Visit Duration" << setw(20) << "Avg Visit Duration" << setw(18)
+       << "Total Visits" << setw(18) << "Avg Visits" << endl;
+
+  cout << string(140, '-') << endl;
+
+  for (int group = 0; group < 5; group++) {
+
+    int patientCounter = 0;
+    double totalExpenditure = 0.0;
+    double totalVisitDuration = 0.0;
+    double totalVisits = 0.0;
+
+    for (int i = 0; i < patientCount; i++) {
+
+      if (patientList[i].age >= minAge[group] &&
+          patientList[i].age <= maxAge[group]) {
+
+        double expenditure = totalMedicalCost(patientList[i]);
+
+        totalExpenditure += expenditure;
+
+        totalVisitDuration +=
+            patientList[i].lengthOfStay * patientList[i].daysVisitsPerYear;
+
+        totalVisits += patientList[i].daysVisitsPerYear;
+
+        patientCounter++;
+      }
+    }
+
+    double averageExpenditure = 0.0;
+    double averageVisitDuration = 0.0;
+    double averageVisits = 0.0;
+
+    if (patientCounter > 0) {
+      averageExpenditure = totalExpenditure / patientCounter;
+      averageVisitDuration = totalVisitDuration / patientCounter;
+      averageVisits = totalVisits / patientCounter;
+    }
+
+    cout << left << setw(12) << ageGroup[group] << setw(12) << patientCounter
+         << setw(20) << totalExpenditure << setw(20) << averageExpenditure
+         << setw(20) << totalVisitDuration << setw(20) << averageVisitDuration
+         << setw(18) << totalVisits << setw(18) << averageVisits << endl;
+  }
+
+  cout << string(140, '=') << endl;
 }
 
 void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
@@ -265,14 +328,14 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
         }
       }
 
-      if (fieldToBeCompare == "lengthOfStay") {
+      if (fieldToBeCompare == "stay") {
         if (patientList[j].lengthOfStay > patientList[j + 1].lengthOfStay) {
           swap(patientList[j], patientList[j + 1]);
           swapped = true;
         }
       }
 
-      if (fieldToBeCompare == "totalMedicalCost") {
+      if (fieldToBeCompare == "cost") {
         if (totalMedicalCost(patientList[j]) >
             totalMedicalCost(patientList[j + 1])) {
           swap(patientList[j], patientList[j + 1]);
@@ -290,6 +353,8 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << string(80, '*') << endl;
   cout << "Sorting took " << duration.count() << " microseconds" << endl;
+  size_t arrayMemory = sizeof(*patientList);
+  cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }
 
@@ -337,6 +402,8 @@ void searchUsingLinear(Patient patientList[], int category = 1,
 
   cout << string(80, '*') << endl;
   cout << "Searching took " << duration.count() << " microseconds" << endl;
+  size_t arrayMemory = sizeof(*patientList);
+  cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 
   cout << "Found " << counter << " matching patient(s)" << endl << endl;
@@ -370,6 +437,7 @@ void searchUsingBinary(Patient patientList[], string fieldToSearch,
   Patient tempPatient;
 
   bool found = false;
+  // no caretype search because it is impossible
   if (fieldToSearch == "age") {
     while (low <= high) {
       int mid = low + (high - low) / 2;
@@ -407,6 +475,8 @@ void searchUsingBinary(Patient patientList[], string fieldToSearch,
 
   cout << string(80, '*') << endl;
   cout << "Searching took " << duration.count() << " microseconds" << endl;
+  size_t arrayMemory = sizeof(*patientList);
+  cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 
   if (counter > 0) {

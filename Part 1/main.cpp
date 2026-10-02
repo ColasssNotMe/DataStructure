@@ -79,6 +79,10 @@ int loadDatasetOnce(const string &fileName) {
 void showComparisonMenu() {
   int choice;
 
+  Array::Patient tempList1[200];
+  Array::Patient tempList2[200];
+  Array::Patient tempList3[200];
+
   do {
     cout << "\n" << string(80, '=') << endl;
     cout << "Menu" << endl;
@@ -87,6 +91,10 @@ void showComparisonMenu() {
     cout << "2. Print array" << endl;
     cout << "3. Print linked list" << endl;
     cout << "4. Sort" << endl;
+    cout << "5. Show total medical billing costs per dataset" << endl;
+    cout << "6. Compare expenditure and visit durations across datasets and "
+            "age groups. "
+         << endl;
     cout << "8. Array care-type summary" << endl;
     cout << "9. Linked-list care-type summary" << endl;
     cout << "10. Linear search" << endl;
@@ -124,6 +132,9 @@ void showComparisonMenu() {
         loadDatasetOnce("dataset3_facility_c.csv");
         cout << "All dataset loaded " << endl;
       }
+      Array::readFromDataset("dataset1_facility_a.csv", tempList1);
+      Array::readFromDataset("dataset2_facility_b.csv", tempList2);
+      Array::readFromDataset("dataset3_facility_c.csv", tempList3);
 
     } else if (Array::patientCount == 0 && choice != 0) {
       cout << "Please load a dataset first." << endl;
@@ -144,13 +155,41 @@ void showComparisonMenu() {
       cout << string(30, '*') << endl;
       LinkedList::sortByBubble(LinkedList::patientNode, field);
       // TODO: call other sorting function here
+    } else if (choice == 5) {
+      double total = 0.0;
+      for (int i = 0; i < 200; i++) {
+        total += Array::totalMedicalCost(tempList1[i]);
+      }
+      cout << "The total medical cost for dataset 1: " << total << endl;
+
+      total = 0;
+      for (int i = 0; i < 200; i++) {
+        total += Array::totalMedicalCost(tempList2[i]);
+      }
+      cout << "The total medical cost for dataset 2: " << total << endl;
+
+      total = 0;
+      for (int i = 0; i < 200; i++) {
+        total += Array::totalMedicalCost(tempList3[i]);
+      }
+      cout << "The total medical cost for dataset 3: " << total << endl;
+
+    } else if (choice == 6) {
+      cout << "Must run option 5 to get result" << endl;
+      Array::compareExpenditureAndVisitDuration(tempList1, 200, "Dataset 1");
+      Array::compareExpenditureAndVisitDuration(tempList2, 200, "Dataset 2");
+      Array::compareExpenditureAndVisitDuration(tempList3, 200, "Dataset 3");
+
     } else if (choice == 8) {
+      Array::sortIntoCategory(Array::patientList);
+
       Array::mostPreferredCareType(Array::category1, Array::category1Count);
       Array::mostPreferredCareType(Array::category2, Array::category2Count);
       Array::mostPreferredCareType(Array::category3, Array::category3Count);
       Array::mostPreferredCareType(Array::category4, Array::category4Count);
       Array::mostPreferredCareType(Array::category5, Array::category5Count);
     } else if (choice == 9) {
+      LinkedList::sortIntoCategory(LinkedList::patientNode);
       LinkedList::mostPreferredCareType(LinkedList::category1);
       LinkedList::mostPreferredCareType(LinkedList::category2);
       LinkedList::mostPreferredCareType(LinkedList::category3);
@@ -168,24 +207,42 @@ void showComparisonMenu() {
       cout << "Maximum total medical cost: ";
       cin >> maxCost;
 
+      cout << string(30, '-') << endl;
+      cout << "Searching on Sorted List" << endl;
+      cout << string(30, '-') << endl;
       Array::searchUsingLinear(Array::patientList, category, visitDuration,
                                maxCost);
+      LinkedList::searchUsingLinear(LinkedList::patientNode);
+      cout << endl << endl;
+
+      cout << string(30, '-') << endl;
+      cout << "Searching on unsorted List" << endl;
+      cout << string(30, '-') << endl;
+      Array::searchUsingLinear(Array::unsortedPatientList, category,
+                               visitDuration, maxCost);
+      LinkedList::searchUsingLinear(LinkedList::unsortedPatientNode);
+      cout << endl << endl;
+
     } else if (choice == 11) {
-      int category;
-      int visitDuration;
-      float maxCost;
+      string fieldToSearch;
+      double value;
 
-      cout << "Category: ";
-      cin >> category;
-      cout << "Minimum visit duration: ";
-      cin >> visitDuration;
-      cout << "Maximum total medical cost: ";
-      cin >> maxCost;
+      cout << "Search field (age / visitDuration): ";
+      cin >> fieldToSearch;
 
-      LinkedList::searchUsingLinear(LinkedList::patientNode, category,
-                                    visitDuration, maxCost);
+      cout << "Value: ";
+      cin >> value;
+
+      cout << string(30, '-') << endl;
+      cout << "Searching on Sorted List" << endl;
+      cout << string(30, '-') << endl;
+
+      Array::searchUsingBinary(Array::patientList, fieldToSearch, value);
+      LinkedList::searchUsingBinary(LinkedList::patientNode, fieldToSearch,
+                                    value);
+
+      cout << endl << endl;
     }
-
   } while (choice != 0);
 }
 

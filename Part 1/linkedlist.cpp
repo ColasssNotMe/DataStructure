@@ -349,6 +349,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
 
   auto start = chrono::high_resolution_clock::now();
   bool swapped;
+  int nodeCount = 0;
 
   do {
     swapped = false;
@@ -366,7 +367,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
           swapped = true;
         }
 
-      } else if (fieldToBeCompare == "lengthOfStay") {
+      } else if (fieldToBeCompare == "stay") {
 
         if (current->patient.lengthOfStay > next->patient.lengthOfStay) {
 
@@ -374,7 +375,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
           swapped = true;
         }
 
-      } else if (fieldToBeCompare == "totalMedicalCost") {
+      } else if (fieldToBeCompare == "cost") {
 
         if (totalMedicalCost(current) > totalMedicalCost(next)) {
 
@@ -382,6 +383,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
           swapped = true;
         }
       }
+      nodeCount++;
 
       current = current->nextPatient;
     }
@@ -392,11 +394,14 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
   auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << string(80, '*') << endl;
   cout << "Sorting took " << duration.count() << " microseconds" << endl;
+  size_t linkedListMemory = nodeCount * sizeof(PatientNode);
+  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }
 
 int searchUsingLinear(PatientNode *&head, int category = 1,
                       int visitDuration = 0, float totalMedicalCost = 0.0) {
+  auto start = chrono::high_resolution_clock::now();
 
   PatientNode *current = nullptr;
 
@@ -452,12 +457,21 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
           temp = temp->nextPatient;
         }
         temp->nextPatient = newNode;
+
+        counter++;
       }
-      counter++;
     }
 
     current = current->nextPatient;
   }
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << string(80, '*') << endl;
+  cout << "Searching took " << duration.count() << " microseconds" << endl;
+  size_t linkedListMemory = counter * sizeof(PatientNode);
+  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
+  cout << string(80, '*') << endl;
 
   return counter;
 }
@@ -534,6 +548,8 @@ void searchUsingBinary(PatientNode *&head, string fieldToSearch, double value) {
 
   cout << string(80, '*') << endl;
   cout << "Searching took " << duration.count() << " microseconds" << endl;
+  size_t linkedListMemory = counter * sizeof(PatientNode);
+  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 
   if (counter > 0) {

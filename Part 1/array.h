@@ -44,6 +44,9 @@ void tempPrintArr(Patient arr[], int count);
 
 void sortIntoCategory(Patient toBeSortList[]);
 
+void compareExpenditureAndVisitDuration(Patient patientList[], int patientCount,
+                                        string datasetName);
+
 void mostPreferredCareType(Patient array[], int totalNumberOfPatient);
 
 void sortByBubble(Patient patientList[], string fieldToBeCompare,
