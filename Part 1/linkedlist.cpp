@@ -462,6 +462,14 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
     current = current->nextPatient;
   }
 
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << string(80, '*') << endl;
+  cout << "Searching took " << duration.count() << " microseconds" << endl;
+  size_t linkedListMemory = counter * sizeof(PatientNode);
+  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
+  cout << string(80, '*') << endl;
+
   if (counter > 0) {
     cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
          << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
@@ -480,14 +488,6 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
       result = result->nextPatient;
     }
   }
-
-  auto stop = chrono::high_resolution_clock::now();
-  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << string(80, '*') << endl;
-  cout << "Searching took " << duration.count() << " microseconds" << endl;
-  size_t linkedListMemory = counter * sizeof(PatientNode);
-  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
-  cout << string(80, '*') << endl;
 
   return counter;
 }
