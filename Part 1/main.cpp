@@ -213,7 +213,8 @@ void showComparisonMenu() {
       cout << string(30, '-') << endl;
       Array::searchUsingLinear(Array::patientList, category, visitDuration,
                                maxCost);
-      LinkedList::searchUsingLinear(LinkedList::patientNode);
+      LinkedList::searchUsingLinear(LinkedList::patientNode, category,
+                                    visitDuration, maxCost);
       cout << endl << endl;
 
       cout << string(30, '-') << endl;
@@ -221,7 +222,12 @@ void showComparisonMenu() {
       cout << string(30, '-') << endl;
       Array::searchUsingLinear(Array::unsortedPatientList, category,
                                visitDuration, maxCost);
-      LinkedList::searchUsingLinear(LinkedList::unsortedPatientNode);
+      LinkedList::searchUsingLinear(
+          LinkedList::unsortedPatientNode,
+          category,
+          visitDuration,
+          maxCost
+      );
       cout << endl << endl;
 
     } else if (choice == 11) {

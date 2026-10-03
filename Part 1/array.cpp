@@ -454,7 +454,7 @@ void searchUsingLinear(Patient patientList[], int category = 1,
                                patientList[i].daysVisitsPerYear;
     if (patientList[i].age >= minAge && patientList[i].age <= maxAge &&
         patientList[i].lengthOfStay > visitDuration &&
-        calculateMedicalCost < totalMedicalCost) {
+        (totalMedicalCost <= 0 || calculateMedicalCost < totalMedicalCost)) {
       searchResult[counter] = patientList[i];
       counter++;
     }
@@ -494,12 +494,12 @@ void searchUsingBinary(Patient patientList[], string fieldToSearch,
   int maxAge = 100;
 
   int low = 0;
-  int high = patientCount;
+  int high = patientCount - 1;
 
   Patient tempPatient;
 
   bool found = false;
-  // no caretype search because it is impossible
+
   if (fieldToSearch == "age") {
     while (low <= high) {
       int mid = low + (high - low) / 2;
@@ -507,6 +507,8 @@ void searchUsingBinary(Patient patientList[], string fieldToSearch,
       if (patientList[mid].age == value) {
         tempPatient = patientList[mid];
         found = true;
+        counter++;
+        break;
       } else if (patientList[mid].age < value) {
         low = mid + 1;
       } else {

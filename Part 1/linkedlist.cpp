@@ -438,8 +438,6 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
   }
 
   while (current != nullptr) {
-    // TODO: maybe change this to earlier part where the totalmedicalcost is
-    // calculated and store it instead of recalculating
     int calculateMedicalCost = current->patient.lengthOfStay *
                                current->patient.baseCostPerHour *
                                current->patient.daysVisitsPerYear;
@@ -457,12 +455,30 @@ int searchUsingLinear(PatientNode *&head, int category = 1,
           temp = temp->nextPatient;
         }
         temp->nextPatient = newNode;
-
-        counter++;
       }
+      counter++;
     }
 
     current = current->nextPatient;
+  }
+
+  if (counter > 0) {
+    cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
+         << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
+         << setw(20) << "Visits/Year" << endl;
+    cout << string(80, '-') << endl;
+
+    PatientNode *result = searchResult;
+
+    while (result != nullptr) {
+      cout << left << setw(12) << result->patient.PatientID << setw(8)
+           << result->patient.age << setw(20) << result->patient.careType
+           << setw(20) << result->patient.lengthOfStay << setw(20)
+           << result->patient.baseCostPerHour << setw(20)
+           << result->patient.daysVisitsPerYear << endl;
+
+      result = result->nextPatient;
+    }
   }
 
   auto stop = chrono::high_resolution_clock::now();
