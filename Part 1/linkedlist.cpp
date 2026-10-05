@@ -399,6 +399,59 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
   cout << string(80, '*') << endl;
 }
 
+void sortBySelection(PatientNode *&head, string fieldToBeCompare,
+                     int patientCount) {
+  if (head == nullptr || head->nextPatient == nullptr) {
+    cerr << "Unable to execute sortBySelection: "
+         << "head is null or next patient is null" << endl;
+    return;
+  }
+
+  auto start = chrono::high_resolution_clock::now();
+  PatientNode *current = head;
+
+  while (current->nextPatient != nullptr) {
+
+    PatientNode *minNode = current;
+    PatientNode *scanner = current->nextPatient;
+
+    while (scanner != nullptr) {
+
+      if (fieldToBeCompare == "age") {
+        if (scanner->patient.age < minNode->patient.age) {
+          minNode = scanner;
+        }
+
+      } else if (fieldToBeCompare == "stay") {
+        if (scanner->patient.lengthOfStay < minNode->patient.lengthOfStay) {
+          minNode = scanner;
+        }
+
+      } else if (fieldToBeCompare == "cost") {
+        if (totalMedicalCost(scanner) < totalMedicalCost(minNode)) {
+          minNode = scanner;
+        }
+      }
+
+      scanner = scanner->nextPatient;
+    }
+
+    if (minNode != current) {
+      swap(current->patient, minNode->patient);
+    }
+
+    current = current->nextPatient;
+  }
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << string(80, '*') << endl;
+  cout << "Sorting took " << duration.count() << " microseconds" << endl;
+  size_t linkedListMemory = patientCount * sizeof(PatientNode);
+  cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
+  cout << string(80, '*') << endl;
+}
+
 int searchUsingLinear(PatientNode *&head, int category = 1,
                       int visitDuration = 0, float totalMedicalCost = 0.0) {
   auto start = chrono::high_resolution_clock::now();

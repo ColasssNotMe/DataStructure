@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -354,6 +355,46 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   cout << string(80, '*') << endl;
   cout << "Sorting took " << duration.count() << " microseconds" << endl;
   size_t arrayMemory = sizeof(*patientList);
+  cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
+  cout << string(80, '*') << endl;
+}
+void sortBySelection(Patient patientList[], string fieldToBeCompare,
+                     int patientCount) {
+  auto start = chrono::high_resolution_clock::now();
+  for (int i = 0; i < patientCount - 1; i++) {
+    int minIndex = i;
+
+    for (int j = i + 1; j < patientCount; j++) {
+      if (fieldToBeCompare == "age") {
+        if (patientList[j].age < patientList[minIndex].age) {
+          minIndex = j;
+        }
+      }
+
+      if (fieldToBeCompare == "stay") {
+        if (patientList[j].lengthOfStay < patientList[minIndex].lengthOfStay) {
+          minIndex = j;
+        }
+      }
+
+      if (fieldToBeCompare == "cost") {
+        if (totalMedicalCost(patientList[j]) <
+            totalMedicalCost(patientList[minIndex])) {
+          minIndex = j;
+        }
+      }
+    }
+
+    if (minIndex != i) {
+      swap(patientList[i], patientList[minIndex]);
+    }
+  }
+
+  auto stop = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << string(80, '*') << endl;
+  cout << "Sorting took " << duration.count() << " microseconds" << endl;
+  size_t arrayMemory = patientCount * sizeof(*patientList);
   cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }

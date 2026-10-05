@@ -48,6 +48,7 @@ void tempPrintNode(PatientNode *patientNode);
 void sortIntoCategory(PatientNode *&head);
 void mostPreferredCareType(PatientNode *&head);
 void sortByBubble(PatientNode *&head, string fieldToBeCompare);
+void sortBySelection(PatientNode *&head, string fieldToBeCompare);
 int searchUsingLinear(PatientNode *&head, int category = 1,
                       int visitDuration = 0, float totalMedicalCost = 0.0);
 void searchUsingBinary(PatientNode *&head, string fieldToSearch, double value);

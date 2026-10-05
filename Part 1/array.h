@@ -52,6 +52,9 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient);
 void sortByBubble(Patient patientList[], string fieldToBeCompare,
                   int patientCount);
 
+void sortBySelection(Patient patientList[], string fieldToBeCompare,
+                     int patientCount);
+
 void searchUsingLinear(Patient patientList[], int category = 1,
                        int visitDuration = 0, float totalMedicalCost = 0.0);
 

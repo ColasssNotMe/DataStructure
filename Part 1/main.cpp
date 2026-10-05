@@ -144,18 +144,42 @@ void showComparisonMenu() {
     } else if (choice == 3) {
       LinkedList::tempPrintNode(LinkedList::patientNode);
     } else if (choice == 4) {
+      int sortChoice;
       string field;
-      cout << "Sort field (age / stay / cost): ";
-      cin >> field;
-      cout << string(30, '*') << endl;
-      cout << "Array Bubble Sort" << endl;
-      cout << string(30, '*') << endl;
-      Array::sortByBubble(Array::patientList, field, Array::patientCount);
-      cout << string(30, '*') << endl;
-      cout << "Linked List Bubble Sort" << endl;
-      cout << string(30, '*') << endl;
-      LinkedList::sortByBubble(LinkedList::patientNode, field);
-      // TODO: call other sorting function here
+
+      cout << "\n" << string(80, '=') << endl;
+      cout << "Sort Menu" << endl;
+      cout << string(80, '=') << endl;
+      cout << "1. Bubble sort" << endl;
+      cout << "2. Selection sort" << endl;
+      cout << "0. Back" << endl;
+      cout << "Selection: ";
+      cin >> sortChoice;
+
+      if (sortChoice == 1 || sortChoice == 2) {
+        cout << "Sort field (age / stay / cost): ";
+        cin >> field;
+      }
+
+      if (sortChoice == 1) {
+        cout << string(30, '*') << endl;
+        cout << "Array Bubble Sort" << endl;
+        cout << string(30, '*') << endl;
+        Array::sortByBubble(Array::patientList, field, Array::patientCount);
+        cout << string(30, '*') << endl;
+        cout << "Linked List Bubble Sort" << endl;
+        cout << string(30, '*') << endl;
+        LinkedList::sortByBubble(LinkedList::patientNode, field);
+      } else if (sortChoice == 2) {
+        cout << string(30, '*') << endl;
+        cout << "Array Selection Sort" << endl;
+        cout << string(30, '*') << endl;
+        Array::sortBySelection(Array::patientList, field, Array::patientCount);
+        cout << string(30, '*') << endl;
+        cout << "Linked List Selection Sort" << endl;
+        cout << string(30, '*') << endl;
+        LinkedList::sortBySelection(LinkedList::patientNode, field);
+      }
     } else if (choice == 5) {
       double total = 0.0;
       for (int i = 0; i < 200; i++) {
@@ -174,13 +198,11 @@ void showComparisonMenu() {
         total += Array::totalMedicalCost(tempList3[i]);
       }
       cout << "The total medical cost for dataset 3: " << total << endl;
-
     } else if (choice == 6) {
       cout << "Must run option 5 to get result" << endl;
       Array::compareExpenditureAndVisitDuration(tempList1, 200, "Dataset 1");
       Array::compareExpenditureAndVisitDuration(tempList2, 200, "Dataset 2");
       Array::compareExpenditureAndVisitDuration(tempList3, 200, "Dataset 3");
-
     } else if (choice == 8) {
       Array::sortIntoCategory(Array::patientList);
 
@@ -222,14 +244,9 @@ void showComparisonMenu() {
       cout << string(30, '-') << endl;
       Array::searchUsingLinear(Array::unsortedPatientList, category,
                                visitDuration, maxCost);
-      LinkedList::searchUsingLinear(
-          LinkedList::unsortedPatientNode,
-          category,
-          visitDuration,
-          maxCost
-      );
+      LinkedList::searchUsingLinear(LinkedList::unsortedPatientNode, category,
+                                    visitDuration, maxCost);
       cout << endl << endl;
-
     } else if (choice == 11) {
       string fieldToSearch;
       double value;
