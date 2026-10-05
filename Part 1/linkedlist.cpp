@@ -399,8 +399,7 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
   cout << string(80, '*') << endl;
 }
 
-void sortBySelection(PatientNode *&head, string fieldToBeCompare,
-                     int patientCount) {
+void sortBySelection(PatientNode *&head, string fieldToBeCompare) {
   if (head == nullptr || head->nextPatient == nullptr) {
     cerr << "Unable to execute sortBySelection: "
          << "head is null or next patient is null" << endl;
@@ -409,6 +408,7 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare,
 
   auto start = chrono::high_resolution_clock::now();
   PatientNode *current = head;
+  int nodeCount = 1;
 
   while (current->nextPatient != nullptr) {
 
@@ -441,13 +441,14 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare,
     }
 
     current = current->nextPatient;
+    nodeCount++;
   }
 
   auto stop = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << string(80, '*') << endl;
   cout << "Sorting took " << duration.count() << " microseconds" << endl;
-  size_t linkedListMemory = patientCount * sizeof(PatientNode);
+  size_t linkedListMemory = nodeCount * sizeof(PatientNode);
   cout << "Linked list memory usage: " << linkedListMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }

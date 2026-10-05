@@ -95,11 +95,11 @@ void showComparisonMenu() {
     cout << "6. Compare expenditure and visit durations across datasets and "
             "age groups. "
          << endl;
-    cout << "8. Array care-type summary" << endl;
-    cout << "9. Linked-list care-type summary" << endl;
-    cout << "10. Linear search" << endl;
-    cout << "11. Binary search" << endl;
-    cout << "12. Identify highest billing and patient traffic" << endl;
+    cout << "7. Array care-type summary" << endl;
+    cout << "8. Linked-list care-type summary" << endl;
+    cout << "9. Linear search" << endl;
+    cout << "10. Binary search" << endl;
+    cout << "11. Identify highest billing and patient traffic" << endl;
     cout << "0. Exit" << endl;
     cout << "Selection: ";
     cin >> choice;
@@ -203,7 +203,7 @@ void showComparisonMenu() {
       Array::compareExpenditureAndVisitDuration(tempList1, 200, "Dataset 1");
       Array::compareExpenditureAndVisitDuration(tempList2, 200, "Dataset 2");
       Array::compareExpenditureAndVisitDuration(tempList3, 200, "Dataset 3");
-    } else if (choice == 8) {
+    } else if (choice == 7) {
       Array::sortIntoCategory(Array::patientList);
 
       Array::mostPreferredCareType(Array::category1, Array::category1Count);
@@ -211,14 +211,14 @@ void showComparisonMenu() {
       Array::mostPreferredCareType(Array::category3, Array::category3Count);
       Array::mostPreferredCareType(Array::category4, Array::category4Count);
       Array::mostPreferredCareType(Array::category5, Array::category5Count);
-    } else if (choice == 9) {
+    } else if (choice == 8) {
       LinkedList::sortIntoCategory(LinkedList::patientNode);
       LinkedList::mostPreferredCareType(LinkedList::category1);
       LinkedList::mostPreferredCareType(LinkedList::category2);
       LinkedList::mostPreferredCareType(LinkedList::category3);
       LinkedList::mostPreferredCareType(LinkedList::category4);
       LinkedList::mostPreferredCareType(LinkedList::category5);
-    } else if (choice == 10) {
+    } else if (choice == 9) {
       int category;
       int visitDuration;
       float maxCost;
@@ -247,7 +247,7 @@ void showComparisonMenu() {
       LinkedList::searchUsingLinear(LinkedList::unsortedPatientNode, category,
                                     visitDuration, maxCost);
       cout << endl << endl;
-    } else if (choice == 11) {
+    } else if (choice == 10) {
       string fieldToSearch;
       double value;
 
@@ -266,7 +266,7 @@ void showComparisonMenu() {
                                     value);
 
       cout << endl << endl;
-    } else if (choice == 12) {
+    } else if (choice == 11) {
       Array::identifyHighestBillingAndTraffic(Array::patientList,
                                               Array::patientCount);
     }

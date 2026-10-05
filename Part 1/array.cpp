@@ -354,7 +354,7 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << string(80, '*') << endl;
   cout << "Sorting took " << duration.count() << " microseconds" << endl;
-  size_t arrayMemory = sizeof(*patientList);
+  size_t arrayMemory = patientCount * sizeof(*patientList);
   cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }
