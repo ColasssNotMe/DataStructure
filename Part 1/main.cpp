@@ -175,6 +175,13 @@ void showComparisonMenu() {
         cout << string(30, '*') << endl;
         LinkedList::sortByBubble(LinkedList::patientNode, field);
       } else if (sortChoice == 2) {
+//         cout << "Linked List Selection Sort" << endl;
+//         LinkedList::sortBySelection(LinkedList::patientNode, field);
+// 
+//         cout << "Array Selection Sort" << endl;
+//         Array::sortBySelection(Array::patientList, field, Array::patientCount);
+//         cout << endl;
+//         cout << endl;
         cout << string(30, '*') << endl;
         cout << "Array Selection Sort" << endl;
         cout << string(30, '*') << endl;

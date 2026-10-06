@@ -35,7 +35,6 @@ double totalMedicalCost(Patient patient) {
          patient.daysVisitsPerYear;
 }
 
-
 void tempPrintArr(Patient arr[], int count) {
   cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
        << "Care Type" << setw(20) << "Stay" << setw(20) << "Cost/Hour"
@@ -330,15 +329,11 @@ void sortBySelection(Patient patientList[], string fieldToBeCompare,
         if (patientList[j].age < patientList[minIndex].age) {
           minIndex = j;
         }
-      }
-
-      if (fieldToBeCompare == "stay") {
+      } else if (fieldToBeCompare == "stay") {
         if (patientList[j].lengthOfStay < patientList[minIndex].lengthOfStay) {
           minIndex = j;
         }
-      }
-
-      if (fieldToBeCompare == "cost") {
+      } else if (fieldToBeCompare == "cost") {
         if (patientList[j].totalMedicalCost <
             patientList[minIndex].totalMedicalCost) {
           minIndex = j;
