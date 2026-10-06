@@ -347,9 +347,10 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
     return;
   }
 
+  int nodeCount = countNodes(head);
+
   auto start = chrono::high_resolution_clock::now();
   bool swapped;
-  int nodeCount = 0;
 
   do {
     swapped = false;
@@ -383,7 +384,6 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
           swapped = true;
         }
       }
-      nodeCount++;
 
       current = current->nextPatient;
     }
@@ -405,10 +405,10 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare) {
          << "head is null or next patient is null" << endl;
     return;
   }
+  int nodeCount = countNodes(head);
 
   auto start = chrono::high_resolution_clock::now();
   PatientNode *current = head;
-  int nodeCount = 1;
 
   while (current->nextPatient != nullptr) {
 
@@ -441,7 +441,6 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare) {
     }
 
     current = current->nextPatient;
-    nodeCount++;
   }
 
   auto stop = chrono::high_resolution_clock::now();

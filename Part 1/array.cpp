@@ -327,16 +327,12 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
           swap(patientList[j], patientList[j + 1]);
           swapped = true;
         }
-      }
-
-      if (fieldToBeCompare == "stay") {
+      } else if (fieldToBeCompare == "stay") {
         if (patientList[j].lengthOfStay > patientList[j + 1].lengthOfStay) {
           swap(patientList[j], patientList[j + 1]);
           swapped = true;
         }
-      }
-
-      if (fieldToBeCompare == "cost") {
+      } else if (fieldToBeCompare == "cost") {
         if (totalMedicalCost(patientList[j]) >
             totalMedicalCost(patientList[j + 1])) {
           swap(patientList[j], patientList[j + 1]);
@@ -358,6 +354,7 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
   cout << "Array memory usage: " << arrayMemory << " bytes" << endl;
   cout << string(80, '*') << endl;
 }
+
 void sortBySelection(Patient patientList[], string fieldToBeCompare,
                      int patientCount) {
   auto start = chrono::high_resolution_clock::now();
