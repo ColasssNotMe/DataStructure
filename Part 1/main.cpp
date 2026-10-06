@@ -55,6 +55,10 @@ int loadDatasetOnce(const string &fileName) {
     arrayPatient.daysVisitsPerYear = stoi(token);
     linkedPatient.daysVisitsPerYear = arrayPatient.daysVisitsPerYear;
 
+    arrayPatient.totalMedicalCost = Array::totalMedicalCost(arrayPatient);
+    linkedPatient.totalMedicalCost =
+        LinkedList::totalMedicalCostArray(linkedPatient);
+
     // Store in array
     Array::patientList[Array::patientCount] = arrayPatient;
 
@@ -133,9 +137,9 @@ void showComparisonMenu() {
         loadDatasetOnce("dataset3_facility_c.csv");
         cout << "All dataset loaded " << endl;
       }
-      Array::readFromDataset("dataset1_facility_a.csv", tempList1);
-      Array::readFromDataset("dataset2_facility_b.csv", tempList2);
-      Array::readFromDataset("dataset3_facility_c.csv", tempList3);
+      // Array::readFromDataset("dataset1_facility_a.csv", tempList1, 0);
+      // Array::readFromDataset("dataset2_facility_b.csv", tempList2, 0);
+      // Array::readFromDataset("dataset3_facility_c.csv", tempList3, 0);
 
     } else if (Array::patientCount == 0 && choice != 0) {
       cout << "Please load a dataset first." << endl;

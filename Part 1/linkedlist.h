@@ -11,10 +11,11 @@ class Patient {
 public:
   string PatientID;
   int age;
-  std::string careType;
+  string careType;
   int lengthOfStay;
   int baseCostPerHour;
   int daysVisitsPerYear;
+  double totalMedicalCost;
 };
 
 class PatientNode {
@@ -43,6 +44,7 @@ void insertToEnd(PatientNode *&head, Patient patient);
 void insertToEnd(PatientNode *&head, PatientNode *&patient);
 void freeList(PatientNode *&head);
 void readFromDataset(string fileName, PatientNode *&head);
+double totalMedicalCostArray(Patient patient);
 double totalMedicalCost(PatientNode *&patient);
 void tempPrintNode(PatientNode *patientNode);
 void sortIntoCategory(PatientNode *&head);

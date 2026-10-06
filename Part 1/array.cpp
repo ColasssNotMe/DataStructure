@@ -1,3 +1,4 @@
+#include "array.h"
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -16,6 +17,7 @@ public:
   int lengthOfStay;
   int baseCostPerHour;
   int daysVisitsPerYear;
+  double totalMedicalCost;
 };
 
 const int MAX_PATIENTS = 200;
@@ -33,44 +35,6 @@ double totalMedicalCost(Patient patient) {
          patient.daysVisitsPerYear;
 }
 
-int readFromDataset(string fileName, Patient patientListToBeAppend[]) {
-  ifstream file(fileName);
-  if (!file.is_open()) {
-    cerr << "Error: Could not open the file " << fileName << endl;
-    return 0;
-  }
-
-  string line;
-  int lineCount = 0;
-
-  // Remove header row
-  getline(file, line);
-
-  while (getline(file, line) && lineCount < MAX_PATIENTS) {
-    if (line.empty()) {
-      continue;
-    }
-
-    stringstream ss(line);
-    string token;
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].PatientID = token;
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].age = stoi(token);
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].careType = token;
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].lengthOfStay = stoi(token);
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].baseCostPerHour = stoi(token);
-    getline(ss, token, ',');
-    patientListToBeAppend[lineCount].daysVisitsPerYear = stoi(token);
-    lineCount++;
-  }
-
-  file.close();
-  return lineCount;
-}
 
 void tempPrintArr(Patient arr[], int count) {
   cout << left << setw(12) << "Patient ID" << setw(8) << "Age" << setw(20)
@@ -205,7 +169,7 @@ void mostPreferredCareType(Patient array[], int totalNumberOfPatient) {
       inAvg = 0;
   for (int i = 0; i < totalNumberOfPatient; i++) {
     if (array[i].PatientID == "") {
-      return;
+      break;
     } else {
       int lengthOfStay = array[i].lengthOfStay;
       int baseCostPerHour = array[i].baseCostPerHour;
@@ -333,8 +297,8 @@ void sortByBubble(Patient patientList[], string fieldToBeCompare,
           swapped = true;
         }
       } else if (fieldToBeCompare == "cost") {
-        if (totalMedicalCost(patientList[j]) >
-            totalMedicalCost(patientList[j + 1])) {
+        if (patientList[j].totalMedicalCost >
+            patientList[j + 1].totalMedicalCost) {
           swap(patientList[j], patientList[j + 1]);
           swapped = true;
         }
@@ -375,8 +339,8 @@ void sortBySelection(Patient patientList[], string fieldToBeCompare,
       }
 
       if (fieldToBeCompare == "cost") {
-        if (totalMedicalCost(patientList[j]) <
-            totalMedicalCost(patientList[minIndex])) {
+        if (patientList[j].totalMedicalCost <
+            patientList[minIndex].totalMedicalCost) {
           minIndex = j;
         }
       }
@@ -405,10 +369,10 @@ void identifyHighestBillingAndTraffic(Patient patientList[], int patientCount) {
   string ageGroup[5] = {"0-17", "18-25", "26-45", "46-60", "61-100"};
 
   double totalBilling[5] = {0, 0, 0, 0, 0};
-  int careTypeCount[5] = {0, 0, 0, 0, 0};
 
-  string careTypes[5] = {"Emergency", "Inpatient", "Outpatient",
-                         "Rehabilitation", "Vaccination"};
+  string careTypes[6] = {"Emergency",      "Inpatient",       "Outpatient",
+                         "Rehabilitation", "Routine Checkup", "Vaccination"};
+  int careTypeCount[6] = {0, 0, 0, 0, 0, 0};
 
   for (int i = 0; i < patientCount; i++) {
 
@@ -421,7 +385,7 @@ void identifyHighestBillingAndTraffic(Patient patientList[], int patientCount) {
       }
     }
 
-    for (int type = 0; type < 5; type++) {
+    for (int type = 0; type < 6; type++) {
       if (patientList[i].careType == careTypes[type]) {
         careTypeCount[type]++;
         break;
@@ -439,7 +403,7 @@ void identifyHighestBillingAndTraffic(Patient patientList[], int patientCount) {
 
   int highestTrafficType = 0;
 
-  for (int i = 1; i < 5; i++) {
+  for (int i = 1; i < 6; i++) {
     if (careTypeCount[i] > careTypeCount[highestTrafficType]) {
       highestTrafficType = i;
     }
@@ -593,4 +557,3 @@ void searchUsingBinary(Patient patientList[], string fieldToSearch,
          << setw(20) << tempPatient.daysVisitsPerYear << endl;
   }
 }
-

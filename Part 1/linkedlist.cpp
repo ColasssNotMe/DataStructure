@@ -1,3 +1,4 @@
+#include "linkedlist.h"
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -17,6 +18,7 @@ public:
   int lengthOfStay;
   int baseCostPerHour;
   int daysVisitsPerYear;
+  double totalMedicalCost;
 };
 
 class PatientNode {
@@ -72,6 +74,7 @@ void insertToEnd(PatientNode *&head, Patient patient) {
 
 // different param same function
 void insertToEnd(PatientNode *&head, PatientNode *&patient) {
+  patient->nextPatient = nullptr;
 
   if (head == nullptr) {
     head = patient;
@@ -111,47 +114,9 @@ int countNodes(PatientNode *head) {
   return count;
 }
 
-void readFromDataset(string fileName, PatientNode *&head) {
-  ifstream file(fileName);
-  if (!file.is_open()) {
-    cerr << "Error: Could not open the file " << fileName << endl;
-    return;
-  }
-  string line;
-  int lineCount = 0;
-  // Remove header row
-  getline(file, line);
-
-  while (getline(file, line) && lineCount < MAX_PATIENTS) {
-    Patient tempPatient;
-
-    stringstream ss(line);
-    string token;
-
-    getline(ss, token, ',');
-    tempPatient.PatientID = token;
-
-    getline(ss, token, ',');
-    tempPatient.age = stoi(token);
-
-    getline(ss, token, ',');
-    tempPatient.careType = token;
-
-    getline(ss, token, ',');
-    tempPatient.lengthOfStay = stoi(token);
-
-    getline(ss, token, ',');
-    tempPatient.baseCostPerHour = stoi(token);
-
-    getline(ss, token, ',');
-    tempPatient.daysVisitsPerYear = stoi(token);
-
-    insertToEnd(head, tempPatient);
-
-    lineCount++;
-  }
-
-  file.close();
+double totalMedicalCostArray(Patient patient) {
+  return patient.lengthOfStay * patient.baseCostPerHour *
+         patient.daysVisitsPerYear;
 }
 
 double totalMedicalCost(PatientNode *&patient) {
@@ -378,7 +343,8 @@ void sortByBubble(PatientNode *&head, string fieldToBeCompare) {
 
       } else if (fieldToBeCompare == "cost") {
 
-        if (totalMedicalCost(current) > totalMedicalCost(next)) {
+        if (current->patient.totalMedicalCost >
+            next->patient.totalMedicalCost) {
 
           swap(current->patient, next->patient);
           swapped = true;
@@ -428,7 +394,8 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare) {
         }
 
       } else if (fieldToBeCompare == "cost") {
-        if (totalMedicalCost(scanner) < totalMedicalCost(minNode)) {
+        if (scanner->patient.totalMedicalCost <
+            minNode->patient.totalMedicalCost) {
           minNode = scanner;
         }
       }
@@ -634,44 +601,3 @@ void searchUsingBinary(PatientNode *&head, string fieldToSearch, double value) {
          << setw(20) << tempPatient.daysVisitsPerYear << endl;
   }
 }
-
-// Menus
-
-void datasetMenu() {
-  string selection = "";
-
-  cout << string(80, '=') << endl;
-  cout << "Dataset Selection" << endl;
-  cout << string(80, '=') << endl;
-
-  cout << "Please enter absolute path, or input 1, 2 or 3" << endl;
-  cout << "1. Dataset 1" << endl;
-  cout << "2. Dataset 2" << endl;
-  cout << "3. Dataset 3" << endl;
-  cout << "4. All Dataset" << endl;
-  cout << "Selection: ";
-
-  cin >> selection;
-
-  if (selection == "1") {
-    datasetFileName = "dataset1_facility_a.csv";
-  } else if (selection == "2") {
-    datasetFileName = "dataset2_facility_b.csv";
-  } else if (selection == "3") {
-    datasetFileName = "dataset3_facility_c.csv";
-  } else if (selection == "4") {
-    readFromDataset("dataset1_facility_a.csv", patientNode);
-    readFromDataset("dataset2_facility_b.csv", patientNode);
-    readFromDataset("dataset3_facility_c.csv", patientNode);
-    readFromDataset("dataset1_facility_a.csv", unsortedPatientNode);
-    readFromDataset("dataset2_facility_b.csv", unsortedPatientNode);
-    readFromDataset("dataset3_facility_c.csv", unsortedPatientNode);
-    return;
-  } else {
-    datasetFileName = selection;
-  }
-
-  readFromDataset(datasetFileName, patientNode);
-  readFromDataset(datasetFileName, unsortedPatientNode);
-}
-

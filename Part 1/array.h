@@ -11,10 +11,11 @@ class Patient {
 public:
   string PatientID;
   int age;
-  std::string careType;
+  string careType;
   int lengthOfStay;
   int baseCostPerHour;
   int daysVisitsPerYear;
+  double totalMedicalCost;
 };
 
 extern Patient patientList[];
@@ -38,7 +39,7 @@ extern Patient searchResult[];
 
 double totalMedicalCost(Patient patient);
 
-int readFromDataset(string fileName, Patient patientListToBeAppend[]);
+int readFromDataset(string fileName, Patient patientListToBeAppend[],int startIndex);
 
 void tempPrintArr(Patient arr[], int count);
 
