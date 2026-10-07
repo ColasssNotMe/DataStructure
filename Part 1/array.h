@@ -39,7 +39,7 @@ extern Patient searchResult[];
 
 double totalMedicalCost(Patient patient);
 
-int readFromDataset(string fileName, Patient patientListToBeAppend[],int startIndex);
+int readFromDataset(string fileName, Patient patientListToBeAppend[]);
 
 void tempPrintArr(Patient arr[], int count);
 

@@ -30,6 +30,45 @@ Patient sortedPatientList[MAX_PATIENT_ALL_DATASET];
 int patientCount = 0;
 
 // helper function
+int readFromDataset(string fileName, Patient patientListToBeAppend[]) {
+  ifstream file(fileName);
+  if (!file.is_open()) {
+    cerr << "Error: Could not open the file " << fileName << endl;
+    return 0;
+  }
+
+  string line;
+  int lineCount = 0;
+
+  // Remove header row
+  getline(file, line);
+
+  while (getline(file, line) && lineCount < MAX_PATIENTS) {
+    if (line.empty()) {
+      continue;
+    }
+
+    stringstream ss(line);
+    string token;
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].PatientID = token;
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].age = stoi(token);
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].careType = token;
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].lengthOfStay = stoi(token);
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].baseCostPerHour = stoi(token);
+    getline(ss, token, ',');
+    patientListToBeAppend[lineCount].daysVisitsPerYear = stoi(token);
+    lineCount++;
+  }
+
+  file.close();
+  return lineCount;
+}
+
 double totalMedicalCost(Patient patient) {
   return patient.lengthOfStay * patient.baseCostPerHour *
          patient.daysVisitsPerYear;

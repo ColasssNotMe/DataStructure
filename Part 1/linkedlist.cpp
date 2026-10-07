@@ -52,6 +52,7 @@ PatientNode *category4 = nullptr;
 PatientNode *category5 = nullptr;
 
 // helper function
+
 void insertToEnd(PatientNode *&head, Patient patient) {
   PatientNode *newNode = new PatientNode(patient);
 
@@ -91,6 +92,49 @@ void insertToEnd(PatientNode *&head, PatientNode *&patient) {
 
   // make the newly created node.nextpatient to become the patient to be insert
   current->nextPatient = patient;
+}
+
+void readFromDataset(string fileName, PatientNode *&head) {
+  ifstream file(fileName);
+  if (!file.is_open()) {
+    cerr << "Error: Could not open the file " << fileName << endl;
+    return;
+  }
+  string line;
+  int lineCount = 0;
+  // Remove header row
+  getline(file, line);
+
+  while (getline(file, line) && lineCount < MAX_PATIENTS) {
+    Patient tempPatient;
+
+    stringstream ss(line);
+    string token;
+
+    getline(ss, token, ',');
+    tempPatient.PatientID = token;
+
+    getline(ss, token, ',');
+    tempPatient.age = stoi(token);
+
+    getline(ss, token, ',');
+    tempPatient.careType = token;
+
+    getline(ss, token, ',');
+    tempPatient.lengthOfStay = stoi(token);
+
+    getline(ss, token, ',');
+    tempPatient.baseCostPerHour = stoi(token);
+
+    getline(ss, token, ',');
+    tempPatient.daysVisitsPerYear = stoi(token);
+
+    insertToEnd(head, tempPatient);
+
+    lineCount++;
+  }
+
+  file.close();
 }
 
 void freeList(PatientNode *&head) {
