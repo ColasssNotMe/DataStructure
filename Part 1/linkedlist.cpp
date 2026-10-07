@@ -423,28 +423,28 @@ void sortBySelection(PatientNode *&head, string fieldToBeCompare) {
   while (current->nextPatient != nullptr) {
 
     PatientNode *minNode = current;
-    PatientNode *scanner = current->nextPatient;
+    PatientNode *nextPatient = current->nextPatient;
 
-    while (scanner != nullptr) {
+    while (nextPatient != nullptr) {
 
       if (fieldToBeCompare == "age") {
-        if (scanner->patient.age < minNode->patient.age) {
-          minNode = scanner;
+        if (nextPatient->patient.age < minNode->patient.age) {
+          minNode = nextPatient;
         }
 
       } else if (fieldToBeCompare == "stay") {
-        if (scanner->patient.lengthOfStay < minNode->patient.lengthOfStay) {
-          minNode = scanner;
+        if (nextPatient->patient.lengthOfStay < minNode->patient.lengthOfStay) {
+          minNode = nextPatient;
         }
 
       } else if (fieldToBeCompare == "cost") {
-        if (scanner->patient.totalMedicalCost <
+        if (nextPatient->patient.totalMedicalCost <
             minNode->patient.totalMedicalCost) {
-          minNode = scanner;
+          minNode = nextPatient;
         }
       }
 
-      scanner = scanner->nextPatient;
+      nextPatient = nextPatient->nextPatient;
     }
 
     if (minNode != current) {
