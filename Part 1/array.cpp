@@ -444,14 +444,10 @@ void searchUsingLinear(Patient patientList[], int category = 1,
   }
 
   for (int i = 0; i < patientCount; i++) {
-    // TODO: maybe change this to earlier part where the totalmedicalcost is
-    // calculated and store it instead of recalculating
-    int calculateMedicalCost = patientList[i].lengthOfStay *
-                               patientList[i].baseCostPerHour *
-                               patientList[i].daysVisitsPerYear;
     if (patientList[i].age >= minAge && patientList[i].age <= maxAge &&
         patientList[i].lengthOfStay > visitDuration &&
-        (totalMedicalCost <= 0 || calculateMedicalCost < totalMedicalCost)) {
+        (totalMedicalCost <= 0 ||
+         patientList[i].totalMedicalCost < totalMedicalCost)) {
       searchResult[counter] = patientList[i];
       counter++;
     }
