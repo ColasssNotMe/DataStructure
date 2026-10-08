@@ -25,7 +25,6 @@ const int MAX_PATIENT_ALL_DATASET = 600;
 
 Patient patientList[MAX_PATIENT_ALL_DATASET];
 Patient unsortedPatientList[MAX_PATIENT_ALL_DATASET];
-Patient sortedPatientList[MAX_PATIENT_ALL_DATASET];
 
 int patientCount = 0;
 

@@ -225,7 +225,6 @@ void sortIntoCategory(PatientNode *&head) {
   cout << "Sort into category done" << endl;
 }
 
-// TODO: verify implementation
 void mostPreferredCareType(PatientNode *&head) {
   int vaccineCounter = 0, rehabCounter = 0, emergencyCounter = 0,
       outpatientCounter = 0, inpatientCounter = 0, routineCounter = 0;
